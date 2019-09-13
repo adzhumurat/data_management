@@ -1,0 +1,15 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[dev-packages]
+
+[packages]
+numpy = "==1.16.0"
+psycopg2-binary = "==2.7.5"
+pymongo = "==3.7.1"
+redis = "==3.3.8"
+
+[requires]
+python_version = "3.6"
