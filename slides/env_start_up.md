@@ -1,37 +1,37 @@
 # Подготовка машины к работе
 
-## Описание рабочей среды
+# Урок 1. Базовая настройка рабочей среды
 
 Занятия будут проходить в ОС Ubuntu 18.04 LTS. Установка необходимых баз данных (Mongo, Postgres, Redis, etc.)
-осуществляется прямо в систему Ubuntu, либо  с помощью утилиты виртуализации Docker. Доступны оба варианта, но докер - только для опытных пользователей.
+осуществляется с помощью утилиты виртуализации Docker, либо  прямо в систему Ubuntu. Доступны оба варианта, но докер более предпочтителен.
 
 **Примечание:** Если у Вас MacOS - сойдёт, она похожа на Ubuntu и утилиты командной строки там примерно такие же, курс можно будет пройти.
-Если у Вас Windows, то будет сложнее, но в целом тоже не критично - главное, чтобы было куда установить Postgres (обязательно!) и остальные дистрибутивы, опционально. 
+Если у Вас Windows, то будет сложнее, но в целом тоже не критично - главное, чтобы было куда установить Postgres (обязательно!) и остальные дистрибутивы (Mongo, Redis), опционально. 
 
 ## Установка и настройка операционной системы Ubuntu
 
-Ввесь курс будет проходить на базе дистрибутива Ubuntu - можно и без убунты, но с трудностями винды или мака придётся разбираться при помощи коллег и интернетов, спикер курса не поможет.
+Ввесь курс можно проходить и без Ubuntu, но с трудностями винды или мака придётся разбираться при помощи коллег и интернетов, спикер курса не поможет.
 Если ОС Ubuntu не является основной операционной системой, то можно установить её следующими способами 
 
+* С помощью VirtualBox [по этой инструкции](http://profitraders.com/Ubuntu/VirtualBoxUbuntuInstall.html)
 * с помощью ПО VMWare [по этой инструкции](https://www.quora.com/How-do-I-install-Ubuntu-using-VMware-on-Windows-10) или VirtualBox
-* с помощью облачного сервиса Google Cloud [по этой инструкции](#ubuntu-google-cloud)
-
+* с помощью облачного сервиса Google Cloud [по этой инструкции](#ubuntu-google-cloud) или любого другого, например Яндекс.Облако.
 
 После того, как убунта установлена (любым способом), нужно обновить список пакетов. Для этого запустим в консоли команду:
 
 <pre>
-sudo apt-get update && sudo apt-get -y upgrade
+sudo apt-get update && sudo apt-get -y upgrade;
 </pre>
 
 Эта команда обновит пакетный менеджер apt-get. После этого установить менеджер пакетов pip и вспомогательные утилиты (unzip, git):
 
 <pre>
-sudo apt-get install python-pip unzip git
+sudo apt-get install python-pip unzip git;
 </pre>
 
 Пакет pip - это менеджер пакетов python, его помощью можно будет устанавливать python библиотеки. Утилита unzip - программа для распаковки архивов.
 
-С помощью pip установим библиотеки **requests** и **tqdm**:
+С помощью pip установим библиотеки **requests** и **tqdm**, они нужны чтобы в дальнейшем более удобно загрузить файлы с Google Drive:
 <pre>
 pip install requests;
 pip install tqdm;
@@ -44,12 +44,6 @@ nano ~/.bashrc
 
 Нажимаем комбинацию **ctrl + V**, чтобы долистать до конца файла, затем копируем переменные и их значения и вставляем в открытый файл с помощью комбинации **ctrl + shift + V**
 <pre>
-export APP_MONGO_HOST=localhost
-export APP_MONGO_PORT=27017
-export APP_POSTGRES_HOST=localhost
-export APP_POSTGRES_PORT=5432
-export APP_REDIS_HOST=localhost
-export APP_REDIS_PORT=6379
 export SOURCE_DATA="/usr/local/share/source_data"
 </pre>
 
@@ -58,14 +52,13 @@ export SOURCE_DATA="/usr/local/share/source_data"
 source ~/.bashrc
 </pre>
 
-Эти действия мы совершили для того, чтобы более удобно настроить рабочую среду: скачать данные, залить их в Postgres b n/l/
-Мы установили переменную среды **SOURCE_DATA** - туда, в эту директорию, будет распакован архив с данными, которые будем загружать в Postgres.
-Следующим шагом директорию нужно создать и дать самые широкие права на доступ туда
+Эти действия мы совершили для того, чтобы более удобно настроить рабочую среду: скачать данные, залить их в Postgres и т.д.
+Мы установили переменную среды **SOURCE_DATA** - туда, в эту директорию, будет распакован архив с данными, которые будем загружать в Postgres - это набор `csv` файлов.
 Чтобы проверить, как применились изменения выполним в консоли команду **echo $SOURCE_DATA** - должны увидеть в результат **/usr/local/share/source_data**.
 
 **Справка** команда *echo* "печатает" значение переменной среды *$SOURCE_DATA*, где значок *$* является служебным.
 
-Создадим директорию
+Следующим шагом директорию нужно создать и дать самые широкие права на доступ туда. Начнём с того, что оздадим директорию:
 <pre>
 sudo mkdir $SOURCE_DATA;
 </pre>
@@ -78,13 +71,13 @@ sudo mkdir $SOURCE_DATA;
 * Команда *chmod 777* разрешает cоздание и удаление файлов из директории *$SOURCE_DATA* всем пользователям без исключения
 * Команда *cd* позволяет сменить директорию.
 
-и дадим нужные права
+Установим самые широкие права на чтение и запись в директорию
 <pre>
 sudo chmod 777 $SOURCE_DATA;
 </pre>
 
 
-Перейдём в созданную директорию и создадим вспомогательные директории:
+Перейдём в директорию *$SOURCE_DATA* и создадим вспомогательные директории:
 <pre>
 cd $SOURCE_DATA;
 
@@ -117,7 +110,7 @@ rm -rf download_google_drive; git clone https://github.com/chentinghao/download_
 python download_google_drive/download_gdrive.py 1uWZjmm9vwxZMplMqUtn0r-M16a0ochQa $SOURCE_DATA/data/all_tables.dump
 </pre>
 
-Теперь скачаем текстовые данные в формате csv, которые могут пригодиться для загрузки в Python в следующих частях курса. Запускаем скачивание файла - zip архива с данными. Архив весит примерно 23Mb
+Теперь скачаем текстовые данные в формате csv, которые могут пригодиться для загрузки в Postgres в следующих частях курса. Запускаем скачивание файла - zip архива с данными. Архив весит примерно 23Mb
 <pre>
 python download_google_drive/download_gdrive.py 1D3CcWOSw-MUx6YvJ_4dqOLHZAh-6uTxK data.zip
 </pre>
@@ -147,153 +140,23 @@ git clone https://github.com/adzhumurat/data_management.git
 </pre>
 
 
-### Установка Postgres
+## Работа с Docker
 
-Теперь в Ubuntu нужно установить Postgres. Сначала добавим нужные репозитории
+Для установки системы виртуализации Docker на официальном сайте есть прекрасные пошаговые инструкции для всех основных ОС
+
+* [тут Linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+* [тут MacOS](https://docs.docker.com/docker-for-mac/install/)
+* [тут Windows](https://docs.docker.com/docker-for-windows/install/)
+
+Если у Windows, то для установки нужно использовать вот эту инструкцию:  https://docs.docker.com/toolbox/toolbox_install_windows/ 
+
+Установим docker, согласно [инструкции для Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/).
+Проверьте, что всё работает с помощью запуска команды
 <pre>
-wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -;
-sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -sc)-pgdg main" > /etc/apt/sources.list.d/PostgreSQL.list'
+docker run hello-world
 </pre>
 
-Проведём установку с помощью стандартного менеджера пакетов apt-get
-<pre>
-sudo apt update
-sudo apt-get install postgresql-10
-</pre>
-
-После установки рестартуем демона базы данных
-<pre>
-sudo systemctl stop postgresql.service
-sudo systemctl start postgresql.service
-sudo systemctl enable postgresql.service
-sudo systemctl status postgresql.service
-</pre>
-
-Теперь нужно загрузить дамп в Postgres. Для этого перейдем в консоль Postgres
-<pre>
-sudo su -l postgres
-</pre>
-
-Мы переключимся в сеанс пользователя Postgres. Осталось загрузить текстовый дамп в Постгрю
-<pre>
-psql -d postgres -U postgres -1 -f $SOURCE_DATA/data/all_tables.dump
-</pre>
-
-Подключимся к БД и проверим, что данные загружены
-<pre>
-psql -U postgres -c "SELECT COUNT(*) FROM ratings;"
-</pre>
-
-Результат
-<pre>
- count
---------
- 777776
-(1 row)
-</pre>
-
-Готово! Видео-туториал по установке и настройке среды [доступен по ссылке](https://www.youtube.com/watch?v=Qlfw-oH4QiI)
-
-## Установка Mongo
-
-Выполним установку Mongo [по инструкции](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-18-04). Для установки воспользуемся пакетным менеджером
-<pre>
-sudo apt install -y mongodb
-</pre>
-
-После окончания установки проверим
-<pre>
-sudo systemctl status mongodb
-</pre>
-Результат работы команды
-<pre>
-● mongodb.service - An object/document-oriented database
-   Loaded: loaded (/lib/systemd/system/mongodb.service; enabled; vendor preset: 
-   Active: active (running) since Sat 2019-02-02 13:53:07 MSK; 3min 2s ago
-     Docs: man:mongod(1)
- Main PID: 3853 (mongod)
-    Tasks: 23 (limit: 4915)
-   CGroup: /system.slice/mongodb.service
-           └─3853 /usr/bin/mongod --unixSocketPrefix=/run/mongodb --config /etc/
-
-~
-</pre>
-
-**Внимание**: чтобы вернуться в консоль, наберите
-<pre>
-q
-</pre>
-
-Подключимся к CLI MongoDB
-<pre>
-/usr/bin/mongo
-</pre>
-
-Результат
-<pre>
-VirtualBox:~$ /usr/bin/mongo
-MongoDB shell version v3.6.3
-connecting to: mongodb://127.0.0.1:27017
-MongoDB server version: 3.6.3
-</pre>
-
-Чтобы выйти из консоли Mongo, наберите
-<pre>
-quit()
-</pre>
-
-Проверим, что доступны данные для загрузки
-<pre>
-ls $SOURCE_DATA/raw_data | grep test.json
-</pre>
-
-Выхлоп команды
-<pre>
-test.json
-</pre>
-
-Воспользуемся утилитой Mongoimport для загрузки данных
-<pre>
-/usr/bin/mongoimport --db pets --collection dogs --file $SOURCE_DATA/raw_data/test.json
-</pre>
-
-Результат работы команды
-<pre>
-2019-02-02T15:00:54.383+0300	connected to: localhost
-2019-02-02T15:00:54.439+0300	imported 100 documents
-</pre>
-
-Проверим, что всё ок. Запустим Mongo
-<pre>
-mongo
-</pre>
-
-переключимся в созданную схему данных
-<pre>
-use pets;
-</pre>
-
-Результат
-<pre>
-switched to db pets
-</pre>
-
-Проверим, что json загрузился
-<pre>
-db.dogs.count()
-</pre>
-
-Результат
-<pre>
-100
-</pre>
-
-Всё готово! С MongoDB можно начинать работать.
-
-## Установка docker
-
-Установим docker, согласно [Инструкции тут](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-
+Если увидите ответное приветствие от Docker - готово, вы великолепны! Если не работает без  sudo - продолжайте настройку по инструкции.
 Кроме докера поставим docker-compose
 
 <pre>
@@ -302,39 +165,78 @@ sudo apt-get install docker-compose
 
 Подготовка завершена! Один раз проделав этот пункт, можно к нему больше не возвращаться
 
-### Работа c репозиторием в Docker
+# Урок 2. Запуск среды для хранения данных в контейнере
+
+В этом уроке поговорим о том, как научится использовать Postgres в Docker контейнере
+
+## Базовое использование Docker образов
+
+Теперь, когда Docker установлен, для дальнейшей работы нужно сделать несколько важных действий
+
+* создать сеть `aviation_network`, по которой контейнеры буду передавать данные
+* поднять контейнер `aviation-postgres` с Postgres-сервером, подключить его к сети `aviation_network`
+* поднять контейнер с клиентом `psql` для доступа к Postgres
+* перелить данные из csv-файлов в таблицы Postgres с помощью `psql` клиента
+
+Чтобы выполнить эти действия, [следуйте данной инструкции](./docker_start_up.md)
+
+## Автоматизируем работу с Docker
 
 Переходим в директорию с докер-файлами
 <pre>
-cd data_management/docker_compose
+cd data_management/docker_compose/data_client
 </pre>
 
-Запускаем сборку контейнера. В консоли побежит информация о сборке контейнера. После окончания сборки мы автоматически подключимся к командной строке Debian, т.е. внутрь контейнера:
+Мы научились использовать готовые докер-образы, давайте попробуем создать свой собственный! Чтобы создать образ, его нужно [описать в виде Dockerfile](../docker_compose/data_client/Dockerfile)
+
+Запускаем сборку контейнера. В консоли побежит информация о сборке контейнера - поцесс может занять несколько минут и требует хорошего интернет-канала:
 <pre>
-make client
+docker build -t aviation_data_client:latest .
+</pre>
+
+Когда контейнер собран, подключимся в термина контейнера с помощью команды
+<pre>
+docker run --volume "${SOURCE_DATA}/raw_data":"/usr/share/raw_data" --network aviation_network -it --rm aviation_data_client:latest bash
 </pre>
 
 Проверим, что директория с данными успешно подключилась:
 <pre>
-/ # ls /data
+ls "/usr/share/raw_data"
+</pre>
+
+Ответ
+<pre>
 credits.csv          links.csv            movies_metadata.csv  ratings_small.csv
 keywords.csv         links_small.csv      ratings.csv
 </pre>
 
-Как видно csv-файлы присутствуют, контейнер запущен! можно начинать работу.
+Как видно csv-файлы присутствуют, контейнер запущен! Можно начинать работу. Чтобы прервать работу терминала, выполните команду `exit`.
 
+Docker-контейнер можно рассматривать как программу, которуу запускаем командой `docker run`.
+Для удобства разработки таких вот "программ" используется [специальный файл docker-entrypoint.sh](../docker_compose/data_client/docker-entrypoint.sh)
+Команды из этого файла начинают исполняться, когда вы запускаете контейнер с помощью `docker run`.
 
-Запускаем скрипт для загрузки файлов в Postgres
+В прошлом уроке мы научились загружать данные в Postgres. Давайте автоматизируем этот процесс, который состоит из двух этапов:
+* создание таблиц
+* импорт данных из csv файлов
+
+Рассмотрим [скрипт для загрузки данных load_data.sh](../docker_compose/data_client/app/load_data.sh). Этот скрипт запускается с помощью `docker-entrypint.sh` следующим образом:
+
 <pre>
-bash /home/load_data.sh
+docker run -v "$(pwd)/app":"/www/app" -v "${SOURCE_DATA}/raw_data":"/usr/share/raw_data" -e APP_POSTGRES_HOST=aviation-postgres  --network aviation_network -it --rm aviation_data_client:latest load
 </pre>
 
-После того, как всё данные загружены в Postgres - проверим подключение к БД:
-
-Подключение к Postgres
+После того, как все данные загружены в Postgres - проверим подключение к БД и наличие данных
 <pre>
-psql --host $APP_POSTGRES_HOST -U postgres -c "SELECT COUNT(*) as num_ratings FROM ratings"
+docker run --network aviation_network -it --rm aviation_data_client:latest psql -h aviation-postgres -U postgres -c "SELECT COUNT(*) as num_ratings FROM ratings"
 </pre>
+
+Чтобы подключиться в интерактивный терминал для работы с Postgres достаточно набрать
+<pre>
+docker run --network aviation_network -it --rm aviation_data_client:latest psql -h aviation-postgres -U postgres
+</pre>
+
+Готово! Мы создали кастомный контейнер для работы с данными, описав его с помощью Dockerfile
 
 ## Решение проблем с docker
 
