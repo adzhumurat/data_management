@@ -1,0 +1,45 @@
+version: '2'
+services:
+  postgres_host:
+    image: postgres:10-alpine
+    restart: always
+    ports: ["5433:5432"]
+    container_name: postgres_host
+    networks:
+      aviation_network:
+        aliases:
+          - postgres_host
+    volumes:
+      - ${SOURCE_DATA}/pg_data:/var/lib/postgresql/data
+  mongo_host:
+    image: mongo:4.1.6
+    restart: always
+    ports: ["27018:27017"]
+    container_name: mongo_host
+    networks:
+      aviation_network:
+        aliases:
+          - mongo_host
+  service-cli:
+    build:
+      context: ./data_client
+    depends_on:
+      - postgres_host
+      - mongo_host
+    environment:
+      - APP_POSTGRES_HOST=postgres_host
+      - APP_POSTGRES_USER=postgres
+    volumes:
+      - "${SOURCE_DATA}/raw_data:/usr/share/raw_data"
+      - "./data_client/app:/www/app"
+    networks:
+      - aviation_network
+    container_name: data-client
+    ports:
+        - "8889:8888"
+
+networks:
+  aviation_network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450

@@ -7,6 +7,10 @@ FROM ubuntu:18.04
 # подключение к postgres: docker run --volume $(pwd)/app:/www/app --network aviation_network -it --rm aviation_data_client:latest psql -h aviation-postgres -U postgres
 # сборка pipenv:    docker run --volume $(pwd)/app:/www/app --network aviation_network -it --rm aviation_data_client:latest pipenv
 # старт http сервера docker run -v $(pwd)/app:/www/app --network aviation_network -p 5001:5000 -d --rm aviation_data_client:latest service
+# для docker-compose
+# сборка docker-compose --project-name data-cli -f docker-compose.yml build service-cli
+# данные docker-compose --project-name data-cli -f docker-compose.yml run --rm --name service-cli service-cli load
+# клиент docker-compose --project-name data-cli -f docker-compose.yml run --rm --name service-cli service-cli psql -h postgres_host -U postgres
 
 RUN apt-get update && \
     apt-get install -y curl nano python3-pip python3.6 python3.6-dev wget && \
