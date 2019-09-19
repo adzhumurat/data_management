@@ -20,6 +20,6 @@
 
 * MongoDB нужна директория для хранения данных, создайте её с помощью команды `mkdir mongo_data`
 * запустите контейнер с Mongo, подключив его в правильную сеть и замаунтив директорию с мета-данными Mongo и директорию с "сырыми" данными, которые нужно залить в контейнер `docker run --name aviation-mongo  --network aviation_network -v "$(pwd)/mongo_data:/data/db" -v "${SOURCE_DATA}/raw_data:/usr/share/raw_data" -d mongo:4.1.6`
-* запускаем импорт документов `/usr/bin/mongoimport --db movie --collection tags --file /usr/share/mongo_data/tags.json`
+* запускаем импорт документов `/usr/bin/mongoimport --host $APP_MONGO_HOST --port $APP_MONGO_PORT --db movie --collection tags --file /usr/share/mongo_data/tags.json`
 
 Готово! Монга настроена и готова к использованию
