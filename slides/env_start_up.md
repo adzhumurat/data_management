@@ -264,7 +264,7 @@ docker rmi $(docker images -q)
 
 Параметры docker run, остальные параметры [тут](https://docs.docker.com/v1.11/engine/reference/commandline/run/)
 
-<code>
+<pre>
 --name - Assign a name to the container
 
 -d, --detach - Run container in background and print container ID
