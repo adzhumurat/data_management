@@ -6,7 +6,7 @@ FROM ubuntu:18.04
 # загрузка данных docker run -v $(pwd)/app:/www/app -v ${SOURCE_DATA}/raw_data:/usr/share/raw_data -e APP_POSTGRES_HOST=aviation-postgres  --network aviation_network -it --rm aviation_data_client:latest load
 # подключение к postgres: docker run --volume $(pwd)/app:/www/app --network aviation_network -it --rm aviation_data_client:latest psql -h aviation-postgres -U postgres
 # сборка pipenv:    docker run --volume $(pwd)/app:/www/app --network aviation_network -it --rm aviation_data_client:latest pipenv
-# старт http сервера docker run -v $(pwd)/app:/www/app --network aviation_network -p 5001:5000 -d --rm aviation_data_client:latest service
+# старт http сервера docker run -v $(pwd)/app:/www/app --network aviation_network -p 5001:5000  -e APP_POSTGRES_HOST=aviation-postgres -e APP_POSTGRES_PORT=5432 -d --rm aviation_data_client:latest service
 # для docker-compose
 # сборка docker-compose --project-name data-cli -f docker-compose.yml build service-cli
 # данные docker-compose --project-name data-cli -f docker-compose.yml run --rm --name service-cli service-cli load
