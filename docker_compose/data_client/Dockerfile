@@ -11,6 +11,7 @@ FROM ubuntu:18.04
 # сборка docker-compose --project-name data-cli -f docker-compose.yml build service-cli
 # данные docker-compose --project-name data-cli -f docker-compose.yml run --rm --name service-cli service-cli load
 # клиент docker-compose --project-name data-cli -f docker-compose.yml run --rm --name service-cli service-cli psql -h postgres_host -U postgres
+# старт веб-сервиса  docker-compose --project-name data-cli -f docker-compose.yml run -p 5001:5000 --rm --name service-cli service-cli service
 
 RUN apt-get update && \
     apt-get install -y curl nano python3-pip python3.6 python3.6-dev wget && \

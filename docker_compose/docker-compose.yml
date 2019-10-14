@@ -10,7 +10,7 @@ services:
         aliases:
           - postgres_host
     volumes:
-      - ${SOURCE_DATA}/pg_data:/var/lib/postgresql/data
+      - "${SOURCE_DATA}/pg_data:/var/lib/postgresql/data"
   mongo_host:
     image: mongo:4.1.6
     restart: always
@@ -28,15 +28,16 @@ services:
       - mongo_host
     environment:
       - APP_POSTGRES_HOST=postgres_host
+      - APP_POSTGRES_PORT=5432
       - APP_POSTGRES_USER=postgres
     volumes:
       - "${SOURCE_DATA}/raw_data:/usr/share/raw_data"
       - "./data_client/app:/www/app"
-    networks:
-      - aviation_network
     container_name: data-client
     ports:
-        - "8889:8888"
+      - "5001:5000"
+    networks:
+      - aviation_network
 
 networks:
   aviation_network:
