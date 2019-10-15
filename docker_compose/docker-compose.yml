@@ -11,25 +11,27 @@ services:
           - postgres_host
     volumes:
       - "${SOURCE_DATA}/pg_data:/var/lib/postgresql/data"
-  mongo_host:
-    image: mongo:4.1.6
+  redis_host:
+    image: redis:3.2-alpine
     restart: always
-    ports: ["27018:27017"]
-    container_name: mongo_host
+    ports: ["6380:6379"]
+    container_name: redis_host
     networks:
       aviation_network:
         aliases:
-          - mongo_host
+          - redis_host
   service-cli:
     build:
       context: ./data_client
     depends_on:
       - postgres_host
-      - mongo_host
+      - redis_host
     environment:
       - APP_POSTGRES_HOST=postgres_host
       - APP_POSTGRES_PORT=5432
       - APP_POSTGRES_USER=postgres
+      - APP_REDIS_HOST=redis_host
+      - APP_REDIS_PORT=6379
     volumes:
       - "${SOURCE_DATA}/raw_data:/usr/share/raw_data"
       - "./data_client/app:/www/app"

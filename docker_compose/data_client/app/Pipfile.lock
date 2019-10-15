@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3de763e61bdc851f190f95281507b11df9158c6f2b38b2cd874568440a95a2cc"
+            "sha256": "21a7ec1b5fa73d9b9b51a47069838fb82837e8fb8c49f9f2f12defef27864996"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,14 @@
         ]
     },
     "default": {
+        "msgpack-python": {
+            "hashes": [
+                "sha256:378cc8a6d3545b532dfd149da715abae4fda2a3adb6d74e525d0d5e51f46909b",
+                "sha256:4c3aa9085dbbd2b020e52d81a8bbf7a44248990c3abbe901d53480f1a16c6ab8"
+            ],
+            "index": "pypi",
+            "version": "==0.5.6"
+        },
         "numpy": {
             "hashes": [
                 "sha256:00a458d6821b1e87be873f2126d5646b901047a7480e8ae9773ecf214f0e19f3",
