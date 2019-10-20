@@ -20,18 +20,30 @@ services:
       aviation_network:
         aliases:
           - redis_host
+  mongo_host:
+    image: mongo:4.1.6
+    restart: always
+    ports: ["27018:27017"]
+    container_name: mongo_host
+    networks:
+      netology_network:
+        aliases:
+          - mongo_host
   service-cli:
     build:
       context: ./data_client
     depends_on:
       - postgres_host
       - redis_host
+      - mongo_host
     environment:
       - APP_POSTGRES_HOST=postgres_host
       - APP_POSTGRES_PORT=5432
       - APP_POSTGRES_USER=postgres
       - APP_REDIS_HOST=redis_host
       - APP_REDIS_PORT=6379
+      - APP_MONGO_HOST=mongo_host
+      - APP_MONGO_PORT=27017
     volumes:
       - "${SOURCE_DATA}/raw_data:/usr/share/raw_data"
       - "./data_client/app:/www/app"
