@@ -1,3 +1,5 @@
+import csv
+import json
 import os
 import zipfile
 
@@ -27,5 +29,29 @@ zip_file_name = 'movies_data.zip'
 zipped_data_path = os.path.join(data_dir, zip_file_name)
 with zipfile.ZipFile(zipped_data_path, mode='r', compression=zipfile.ZIP_DEFLATED) as z:
     for file_name in filenames:
-        z.extract(file_name, os.path.join(data_dir, 'raw_data', file_name))
+        z.extract(file_name, os.path.join(data_dir, 'raw_data'))
 print(f'Файлы распакованы в {data_dir}/raw_data')
+
+# выполняем препроцессинг csv->json
+source_dir = os.path.join(data_dir, 'raw_data')
+INPUT_FILE = os.path.join(source_dir, 'movies_metadata.csv')
+OUTPUT_FILE = os.path.join(source_dir, 'tags.json')
+
+fields = (
+    'adult', 'belongs_to_collection', 'budget', 'genres', 'homepage', 'id', 'imdb_id', 'original_language',
+    'original_title', 'overview','popularity', 'poster_path', 'production_companies', 'production_countries',
+    'release_date', 'revenue', 'runtime', 'spoken_languages', 'status', 'tagline', 'title', 'video', 'vote_average', 'vote_count'
+)
+
+with open(OUTPUT_FILE, 'w') as f:
+    with open(INPUT_FILE) as csvfile:
+        cnt = 0
+        reader = csv.DictReader(csvfile, fieldnames=fields, delimiter=',')
+        next(reader, None)
+        for row in reader:
+            content_item = {'movie_id': row['id']}
+            for genre in eval(row['genres']):
+                content_item.update({'tag_id': genre['id'], 'tag_name': genre['name']})
+                f.write(json.dumps(content_item)+'\n')
+                cnt += 1
+print(f'Данные из {INPUT_FILE} записаны в выходной файл {OUTPUT_FILE} в количестве {cnt} строк')
