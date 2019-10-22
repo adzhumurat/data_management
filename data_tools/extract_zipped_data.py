@@ -14,7 +14,7 @@ class Constant:
     extract = 'extract'
     transfom = 'transform'
     # список файлов, которые будем извлекать из архива - чтобы не извлекать ничего лишнего
-    filenames = ('dogs.json', 'links.csv', 'ratings.csv', 'movies_metadata.csv', )
+    filenames = ('dogs.json', 'links.csv', 'ratings.csv', 'movies_metadata.csv', 'tags.json', )
     # директории, которые будут созданы
     raw_data_dir = 'raw_data'
     postgres_data_dir = 'pg_data'
