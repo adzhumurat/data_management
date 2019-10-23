@@ -31,20 +31,29 @@ sudo apt-get install python-pip unzip git;
 
 Пакет pip - это менеджер пакетов python, его помощью можно будет устанавливать python библиотеки. Утилита unzip - программа для распаковки архивов.
 
-С помощью pip установим библиотеки **requests** и **tqdm**, они нужны чтобы в дальнейшем более удобно загрузить файлы с Google Drive:
+Мы установили git не просто так - он нужен для того, чтобы скопировать учебный репозиторий с кодом этого курса.
+Теперь скачиваем репозиторий курса - там хранятся материалы для домашних работ.
+
 <pre>
-pip install requests;
-pip install tqdm;
+git clone https://github.com/adzhumurat/data_management.git
 </pre>
+
+В рапозитории вы найдёте файл `data_management/data_store/movies_data.zip`, в котором хранятся `csv` и `json` файлы.
+Для работы вам нужно извлечь эти файлы в директорию `data_management/data_store/raw_data` чтобы это сделать есть два способа
+
+* умный и хороший способ: запустите команду `python3 data_tools/extract_zipped_data.py -s extract`
+* **либо** создайте директорию `data_management/data_store/raw_data` в ручную и распакуйте туда данные с помощью любого распаковщика
 
 Далее нужно отредактировать файл ~/.bashrc и установить там переменные среды. Для этого откроем файл с помощью редактора nano:
 <pre>
 nano ~/.bashrc
 </pre>
 
+**ВНИМАНИЕ** вам нужно указать **полный** путь до директории, куда вы распаковали файлы, не копируйте бездумно строчку ниже - поменяйте путь до директории data_store.
+
 Нажимаем комбинацию **ctrl + V**, чтобы долистать до конца файла, затем копируем переменные и их значения и вставляем в открытый файл с помощью комбинации **ctrl + shift + V**
 <pre>
-export SOURCE_DATA="/usr/local/share/source_data"
+export SOURCE_DATA="/home/adzhumurat/jupyter_notebooks/data_management/data_store"
 </pre>
 
 После этого закроем файл с помощью комбинации **ctrl + O**, нажать Enter, затем **ctrl + X**, подтвердить **Y**, затем **ctrl + X** и выполним в терминале команду source, чтобы применить изменения:
@@ -54,14 +63,17 @@ source ~/.bashrc
 
 Эти действия мы совершили для того, чтобы более удобно настроить рабочую среду: скачать данные, залить их в Postgres и т.д.
 Мы установили переменную среды **SOURCE_DATA** - туда, в эту директорию, будет распакован архив с данными, которые будем загружать в Postgres - это набор `csv` файлов.
-Чтобы проверить, как применились изменения выполним в консоли команду **echo $SOURCE_DATA** - должны увидеть в результат **/usr/local/share/source_data**.
-
-**Справка** команда *echo* "печатает" значение переменной среды *$SOURCE_DATA*, где значок *$* является служебным.
-
-Следующим шагом директорию нужно создать и дать самые широкие права на доступ туда. Начнём с того, что оздадим директорию:
+Чтобы проверить, как применились изменения выполним в консоли команду 
 <pre>
-sudo mkdir $SOURCE_DATA;
+ls ${SOURCE_DATA}/raw_data
 </pre>
+
+Результат работы команды - должны увидеть в список файлов, которые только что распаковали
+<pre>
+dogs.json  links.csv  movies_metadata.csv  ratings.csv  tags.json
+</pre> 
+
+**Справка** команда *ls* "печатает" список файлов в директории, которая хранится в переменной среды *$SOURCE_DATA*, где значок *$* является служебным.
 
 **Справка** для работы в консоли будем использовать базовые команды Linux
 
@@ -71,74 +83,9 @@ sudo mkdir $SOURCE_DATA;
 * Команда *chmod 777* разрешает cоздание и удаление файлов из директории *$SOURCE_DATA* всем пользователям без исключения
 * Команда *cd* позволяет сменить директорию.
 
-Установим самые широкие права на чтение и запись в директорию
-<pre>
-sudo chmod 777 $SOURCE_DATA;
-</pre>
-
-
-Перейдём в директорию *$SOURCE_DATA* и создадим вспомогательные директории:
-<pre>
-cd $SOURCE_DATA;
-
-mkdir $SOURCE_DATA/raw_data; mkdir $SOURCE_DATA/pg_data; mkdir $SOURCE_DATA/data;
-</pre>
-
-Проверим, что все директории созданы успешно
-
-<pre>
-ls $SOURCE_DATA
-</pre>
-
-Результат работы команды
-<pre>
-raw_data, pg_data, data
-</pre>
-
 ## Загрузка дампа БД  и csv данных
 
-Теперь данные, которые я заранее залил на Google Drive нужно перенести на локальную машину. Для этого  склонируем полезный репозиторий (содержит утилиту для скачивания с Google Cloud).
-
 Мы используем данные [The Movies Dataset](https://www.kaggle.com/rounakbanik/the-movies-dataset) c Kaggle.
-
-<pre>
-rm -rf download_google_drive; git clone https://github.com/chentinghao/download_google_drive.git
-</pre>
-
-Загружаем дамп БД, чтобы создать нужные для работы таблицы
-<pre>
-python download_google_drive/download_gdrive.py 1uWZjmm9vwxZMplMqUtn0r-M16a0ochQa $SOURCE_DATA/data/all_tables.dump
-</pre>
-
-Теперь скачаем текстовые данные в формате csv, которые могут пригодиться для загрузки в Postgres в следующих частях курса. Запускаем скачивание файла - zip архива с данными. Архив весит примерно 23Mb
-<pre>
-python download_google_drive/download_gdrive.py 1D3CcWOSw-MUx6YvJ_4dqOLHZAh-6uTxK data.zip
-</pre>
-
-Сначала распаковываем архив с данными.
-<pre>
-unzip data.zip -d "$SOURCE_DATA"/raw_data;
-</pre>
-
-Мы увидим процесс извлечения данных - это csv и json файлы
-
-<pre>
-Archive:  data.zip
-  inflating: /tmp/data/ratings.csv
-  inflating: /tmp/data/ratings_small.csv
-  inflating: /tmp/data/links.csv
-  inflating: /tmp/data/links_small.csv
-  inflating: /tmp/data/keywords.csv
-  inflating: /tmp/data/movies_metadata.csv
-  inflating: /tmp/data/credits.csv
-</pre>
-
-Теперь скачиваем репозиторий курса - там хранятся материалы для домашних работ.
-
-<pre>
-git clone https://github.com/adzhumurat/data_management.git
-</pre>
-
 
 ## Работа с Docker
 
@@ -206,13 +153,12 @@ ls "/usr/share/raw_data"
 
 Ответ
 <pre>
-credits.csv          links.csv            movies_metadata.csv  ratings_small.csv
-keywords.csv         links_small.csv      ratings.csv
+dogs.json          links.csv            movies_metadata.csv  tags.json      ratings.csv
 </pre>
 
 Как видно csv-файлы присутствуют, контейнер запущен! Можно начинать работу. Чтобы прервать работу терминала, выполните команду `exit`.
 
-Docker-контейнер можно рассматривать как программу, которуу запускаем командой `docker run`.
+Docker-контейнер можно рассматривать как программу, которую запускаем командой `docker run`.
 Для удобства разработки таких вот "программ" используется [специальный файл docker-entrypoint.sh](../docker_compose/data_client/docker-entrypoint.sh)
 Команды из этого файла начинают исполняться, когда вы запускаете контейнер с помощью `docker run`.
 
