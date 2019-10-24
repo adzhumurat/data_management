@@ -26,7 +26,7 @@ services:
     ports: ["27018:27017"]
     container_name: mongo_host
     networks:
-      netology_network:
+      aviation_network:
         aliases:
           - mongo_host
   service-cli:
