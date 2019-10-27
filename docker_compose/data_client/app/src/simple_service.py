@@ -19,7 +19,8 @@ from redis import Redis
 
 # файл, куда посыпятся логи модели
 FORMAT = '%(asctime)-15s %(message)s'
-logging.basicConfig(filename="/www/app/service.log", level=logging.INFO, format=FORMAT)
+log_file_name = "/www/app/service.log"
+logging.basicConfig(filename=log_file_name, level=logging.INFO, format=FORMAT)
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -146,6 +147,8 @@ postgres_interactor = PostgresStorage()
 logging.info('Инициализирован класс для работы с Postgres')
 redis_interactor = RedisStorage()
 logging.info('Инициализирован класс для работы с Redis')
+if os.path.exists(log_file_name):
+    os.chmod(log_file_name, 0o0777)
 
 if __name__ == '__main__':
     classifier_service = socketserver.TCPServer(('', 5000), Handler)
