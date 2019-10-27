@@ -83,7 +83,7 @@ dogs.json  links.csv  movies_metadata.csv  ratings.csv  tags.json
 * Команда *chmod 777* разрешает cоздание и удаление файлов из директории *$SOURCE_DATA* всем пользователям без исключения
 * Команда *cd* позволяет сменить директорию.
 
-## Загрузка дампа БД  и csv данных
+## Загрузка csv данных в Postgres
 
 Мы используем данные [The Movies Dataset](https://www.kaggle.com/rounakbanik/the-movies-dataset) c Kaggle.
 
@@ -183,6 +183,19 @@ docker run --network aviation_network -it --rm aviation_data_client:latest psql 
 </pre>
 
 Готово! Мы создали кастомный контейнер для работы с данными, описав его с помощью Dockerfile
+
+### Автоматизация разворачивания среды с помощью docker-compose
+
+Когда с утилитой `docker` всё станет понятно, можно автоматизировать разворачивание среды с помощью `docker-compose`.
+
+* удалите все файлы из директории `data_store/pg_data`, которые успели туда записаться
+* запустите сборку контейнера для питоновского приложения с помощью команды `docker-compose --project-name data-prj -f docker-compose.yml build service-app`
+* с помощью команды `docker images` убедитесь, что был создан образ с именеи `data-prj_service-app`
+* на всякий случай удалите все контейнеры, которые вы уже назапускали `docker rm -f $(docker container ls -q)`
+* запустите загрузку данных в Postgres `docker-compose --project-name data-prj -f docker-compose.yml run --rm --name env-app service-app load`
+* Проверьте что данные в контейнер успешно загружены `docker-compose --project-name data-prj -f docker-compose.yml run --rm --name env-app service-app psql -h postgres_host -U postgres -c 'SELECT COUNT(*) as cnt FROM ratings'`
+* Чтобы запустить python сервис запустите сборку python окружения `docker-compose --project-name data-prj -f docker-compose.yml run --rm --name env-app service-app pipenv`
+
 
 ## Решение проблем с docker
 

@@ -29,7 +29,7 @@ services:
       aviation_network:
         aliases:
           - mongo_host
-  service-cli:
+  service-app:
     build:
       context: ./data_client
     depends_on:
