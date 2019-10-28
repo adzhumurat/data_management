@@ -196,6 +196,60 @@ docker run --network aviation_network -it --rm aviation_data_client:latest psql 
 * Проверьте что данные в контейнер успешно загружены `docker-compose --project-name data-prj -f docker-compose.yml run --rm --name env-app service-app psql -h postgres_host -U postgres -c 'SELECT COUNT(*) as cnt FROM ratings'`
 * Чтобы запустить python сервис запустите сборку python окружения `docker-compose --project-name data-prj -f docker-compose.yml run --rm --name env-app service-app pipenv`
 
+### Бонус: устанавливаем jupyter notebook
+
+Jupyter - это удобная визуальная среда для запуска Python приложений.
+
+Чтобы установить jupyter в питоновское окружение, выполните команду
+
+<pre>
+docker-compose --project-name data-prj -f docker-compose.yml run --rm --name env-app service-app bash
+</pre> 
+
+Затем, находясь внутри контейнера, запустить установку
+
+<pre>
+pipenv install notebook==5.4.0
+</pre> 
+
+Должен запуститься процесс установки
+
+<pre>
+Installing notebook==5.4.0…
+✔ Installation Succeeded 
+Pipfile.lock (1bab9b) out of date, updating to (864996)…
+Locking [dev-packages] dependencies…
+Locking [packages] dependencies…
+✔ Success! 
+Updated Pipfile.lock (1bab9b)!
+Installing dependencies from Pipfile.lock (1bab9b)…
+  🐍   ▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉ 45/45 — 00:00:09
+To activate this project's virtualenv, run pipenv shell.
+Alternatively, run a command inside the virtualenv with pipenv run.
+</pre>
+
+Выйдите из контейнера и в консоли убунты запустите команду старта jupyter ноутбука
+
+<pre>
+docker-compose --project-name data-prj -f docker-compose.yml run --rm -p 8888:8888 --name env-app service-app jupyter
+</pre>
+
+В консоли появится информация о запуке Юпитера
+<pre>
+[I 08:20:16.711 NotebookApp] Writing notebook server cookie secret to /root/.local/share/jupyter/runtime/notebook_cookie_secret
+[I 08:20:16.950 NotebookApp] Serving notebooks from local directory: /www/app
+[I 08:20:16.950 NotebookApp] 0 active kernels
+[I 08:20:16.950 NotebookApp] The Jupyter Notebook is running at:
+[I 08:20:16.950 NotebookApp] http://0.0.0.0:8888/?token=029e0ce949f5e7cad2d8be93f982f6f5fddb76c81df0353c
+[I 08:20:16.950 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 08:20:16.950 NotebookApp] 
+    
+    Copy/paste this URL into your browser when you connect for the first time,
+    to login with a token:
+        http://0.0.0.0:8888/?token=029e0ce949f5e7cad2d8be93f982f6f5fddb76c81df0353c
+</pre>
+
+Ссылку `http://0.0.0.0:8888/?token=029e0ce949f5e7cad2d8be93f982f6f5fddb76c81df0353c` нужно открыть в браузере и насладиться интерфейсом Jupyter.
 
 ## Решение проблем с docker
 
