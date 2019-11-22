@@ -6,6 +6,8 @@ case "$1" in
     ;;
   pipenv)
     pipenv install --deploy
+    chmod -R 777 ./.venv
+    chmod -R 777 ./.cache
     ;;
   service)
     .venv/bin/python3 src/simple_service.py
