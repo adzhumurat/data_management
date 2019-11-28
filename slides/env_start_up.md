@@ -132,6 +132,11 @@ sudo apt-get install docker-compose
 * стартуем контейнер-клиент `docker-compose --project-name data-prj -f docker-compose.yml run --rm --name env-app service-app bash`
 * запускаем импорт документов `/usr/bin/mongoimport --host $APP_MONGO_HOST --port $APP_MONGO_PORT --db movie --collection tags --file /usr/share/raw_data/tags.json` 
 
+Чтобы "погасить" весь бэкенд, запустите команду
+<pre>
+docker-compose --project-name data-prj -f docker-compose.yml down
+</pre>
+
 ### Бонус: устанавливаем jupyter notebook
 
 Jupyter - это удобная визуальная среда для запуска Python приложений.
