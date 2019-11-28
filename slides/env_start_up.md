@@ -141,35 +141,20 @@ docker-compose --project-name data-prj -f docker-compose.yml down
 
 Jupyter - это удобная визуальная среда для запуска Python приложений.
 
-Чтобы установить jupyter в питоновское окружение, выполните команду
+Чтобы установить jupyter в питоновское окружение, находясь в директории `docker_compose` выполните команду
 
 <pre>
-docker-compose --project-name data-prj -f docker-compose.yml run --rm --name env-app service-app bash
-</pre> 
-
-Затем, находясь внутри контейнера, запустить установку
-
-<pre>
-pipenv install notebook==5.4.0
+docker-compose --project-name data-prj -f docker-compose.yml run --rm --name env-app service-app pipenv
 </pre> 
 
 Должен запуститься процесс установки
 
 <pre>
-Installing notebook==5.4.0…
-✔ Installation Succeeded 
-Pipfile.lock (1bab9b) out of date, updating to (864996)…
-Locking [dev-packages] dependencies…
-Locking [packages] dependencies…
-✔ Success! 
-Updated Pipfile.lock (1bab9b)!
-Installing dependencies from Pipfile.lock (1bab9b)…
-  🐍   ▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉ 45/45 — 00:00:09
-To activate this project's virtualenv, run pipenv shell.
-Alternatively, run a command inside the virtualenv with pipenv run.
+Installing dependencies from Pipfile.lock (8f86a9)…
+  🐍   ▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉ 61/61 — 00:00:22
 </pre>
 
-Выйдите из контейнера и в консоли убунты запустите команду старта jupyter ноутбука
+Затем запустите команду старта jupyter ноутбука
 
 <pre>
 docker-compose --project-name data-prj -f docker-compose.yml run --rm -p 8888:8888 --name env-app service-app jupyter
