@@ -10,10 +10,10 @@ case "$1" in
     chmod -R 777 ./.cache
     ;;
   service)
-    .venv/bin/python3 src/simple_service.py
+    pipenv run python3 src/simple_service.py
     ;;
   jupyter)
-    .venv/bin/jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --allow-root
+    pipenv run jupyter notebook jupyter_notebooks --ip 0.0.0.0 --port 8888 --no-browser --allow-root
     ;;
   *)
     exec "$@"
