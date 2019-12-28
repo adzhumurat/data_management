@@ -14,7 +14,7 @@ psql --host $APP_POSTGRES_HOST -U postgres -c '
   );'
 
 psql --host $APP_POSTGRES_HOST  -U postgres -c \
-    "\\copy links FROM '/usr/share/raw_data/links.csv' DELIMITER ',' CSV HEADER"
+    "\\copy links FROM '/usr/share/data_store/raw_data/links.csv' DELIMITER ',' CSV HEADER"
 
 echo "Загружаем ratings.csv..."
 psql --host $APP_POSTGRES_HOST -U postgres -c '
@@ -26,4 +26,4 @@ psql --host $APP_POSTGRES_HOST -U postgres -c '
   );'
 
 psql --host $APP_POSTGRES_HOST -U postgres -c \
-    "\\copy ratings FROM '/usr/share/raw_data/ratings.csv' DELIMITER ',' CSV HEADER"
+    "\\copy ratings FROM '/usr/share/data_store/raw_data/ratings.csv' DELIMITER ',' CSV HEADER"
