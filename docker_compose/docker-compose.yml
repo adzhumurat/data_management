@@ -45,7 +45,7 @@ services:
       - APP_MONGO_HOST=mongo_host
       - APP_MONGO_PORT=27017
     volumes:
-      - "${SOURCE_DATA}/raw_data:/usr/share/raw_data"
+      - "${SOURCE_DATA}:/usr/share/data_store"
       - "./data_client/app:/www/app"
     container_name: data-client
     ports:
