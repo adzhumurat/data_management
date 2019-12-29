@@ -19,7 +19,8 @@ class Constant:
     raw_data_dir = 'raw_data'
     postgres_data_dir = 'pg_data'
     mongo_data_dir = 'mongo_data'
-    child_dirs = (postgres_data_dir, raw_data_dir, mongo_data_dir)
+    redis_data_dir = 'redis_data'
+    child_dirs = (postgres_data_dir, raw_data_dir, mongo_data_dir, redis_data_dir)
     # Архив для распаковки
     zipped_data_path = os.path.join(data_dir, 'movies_data.zip')
     # отдельные константы для удобства обработки csv->json

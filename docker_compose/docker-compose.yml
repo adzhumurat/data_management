@@ -20,6 +20,8 @@ services:
       aviation_network:
         aliases:
           - redis_host
+    volumes:
+      - "${SOURCE_DATA}/redis_data:/data"
   mongo_host:
     image: mongo:4.1.6
     restart: always
