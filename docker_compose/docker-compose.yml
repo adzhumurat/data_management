@@ -29,6 +29,8 @@ services:
       aviation_network:
         aliases:
           - mongo_host
+    volumes:
+      - "${SOURCE_DATA}/mongo_data:/data/db"
   service-app:
     build:
       context: ./data_client
