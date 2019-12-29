@@ -28,4 +28,5 @@ if __name__ == '__main__':
         sh_command = f'{docker_compose} build {MAIN_SERVICE_NAME}'
     else:
         raise ValueError('Ошибочный сценарий: %s' % args.scenario)
+    print(sh_command)
     call(sh_command, shell=True)
