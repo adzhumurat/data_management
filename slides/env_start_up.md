@@ -107,8 +107,8 @@ sudo apt-get install docker-compose
 
 Монга будет запущена автоматически - это можно убедится, выполнив команду `docker ps | grep mongo`. Нужно только проверить её работоспособность, залив туда данные. 
 
-* находясь внутри контейнера, запускаем импорт документов ` python3 docker_compose/upstart.py -s mongoimport` 
-* стартуем контейнер-клиент `python3 docker_compose/upstart.py -s bash`
+* запускаем импорт документов ` python3 docker_compose/upstart.py -s mongoimport` 
+* стартуем mongo `python3 docker_compose/upstart.py -s mongo`
 
 Чтобы "погасить" весь бэкенд, запустите команду
 <pre>
