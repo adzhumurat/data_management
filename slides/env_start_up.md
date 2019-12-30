@@ -110,12 +110,19 @@ sudo apt-get install docker-compose
 * запускаем импорт документов ` python3 docker_compose/upstart.py -s mongoimport` 
 * стартуем mongo `python3 docker_compose/upstart.py -s mongo`
 
-Чтобы "погасить" весь бэкенд, запустите команду
-<pre>
-python3 docker_compose/upstart.py -s down
-</pre>
+Если добрались до этого шага - поздравляю!
+Вы только что развернули среду для исполнения приложений, которая включает в себя 4 узла, представленных на схеме
 
-### Бонус: устанавливаем jupyter notebook
+![env](./img/data_management.png)
+
+* `service_app` наш "центральный" узел, на который установлен Python, т.н. точка входа, через которую будем общаться с остальными узлами.
+* `postgres_host` узел с *реляционной* СУБД **Postgres**, где мы будем исполнять SQL запросы
+* `mongo_host` узел с *NoSQL* СУБД **MongoDB**
+* `redis_host` узел с *key-value* СУБД **Redis** (будет использоваться как кеширующий сервер)
+
+В течении курса мы поработаем с каждой из этих современных систем хранения данных.
+
+### Бонус: работа jupyter notebook
 
 Jupyter - это удобная визуальная среда для запуска Python приложений.
 
@@ -133,14 +140,9 @@ python3 docker_compose/upstart.py -s jupyter
 
 В консоли появится информация о запуке Юпитера
 <pre>
-[I 08:20:16.711 NotebookApp] Writing notebook server cookie secret to /root/.local/share/jupyter/runtime/notebook_cookie_secret
-[I 08:20:16.950 NotebookApp] Serving notebooks from local directory: /www/app
-[I 08:20:16.950 NotebookApp] 0 active kernels
-[I 08:20:16.950 NotebookApp] The Jupyter Notebook is running at:
-[I 08:20:16.950 NotebookApp] http://0.0.0.0:8888/?token=029e0ce949f5e7cad2d8be93f982f6f5fddb76c81df0353c
 [I 08:20:16.950 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
 [C 08:20:16.950 NotebookApp] 
-    
+   
     Copy/paste this URL into your browser when you connect for the first time,
     to login with a token:
         http://0.0.0.0:8888/?token=029e0ce949f5e7cad2d8be93f982f6f5fddb76c81df0353c
@@ -149,6 +151,11 @@ python3 docker_compose/upstart.py -s jupyter
 Ссылку `http://0.0.0.0:8888/?token=029e0ce949f5e7cad2d8be93f982f6f5fddb76c81df0353c` нужно открыть в браузере и насладиться интерфейсом Jupyter.
 
 ## Решение проблем с docker
+
+Чтобы "погасить" весь бэкенд, запустите команду
+<pre>
+python3 docker_compose/upstart.py -s down
+</pre>
 
 Если контейнер не стартует с ошибкой
 <pre>
