@@ -189,6 +189,10 @@ docker rmi $(docker images -q)
 
 ![выбор ОС](https://habrastorage.org/webt/vl/dt/3m/vldt3mgct8jq3n6n9oa3pmyug_a.png "boot disk")
 
-После установики ваш инстанс можно будет найти на этой странице https://console.cloud.google.com/compute/instances
+После установки ваш инстанс можно будет найти на этой странице https://console.cloud.google.com/compute/instances
 
 ![страница с инстансами](https://habrastorage.org/webt/cb/fx/qz/cbfxqzxqcdo0atxs9eg_c-t3jby.png "Google cloud instances")
+
+# Что мне делать дальше?
+
+Дальше можно переходить к экспериментам! Начните с [простых команд Postgres](./slides/sql_language.md)
