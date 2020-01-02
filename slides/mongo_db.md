@@ -3,7 +3,7 @@
 Подключение к Mongo-серверу осуществляется с помощью утилиты Mongo (в докер-контейнере она уже установлена)
 
 <pre>
-/usr/bin/mongo ${APP_MONGO_HOST}:${APP_MONGO_PORT}
+python3 docker_compose/upstart.py -s mongo
 </pre>
 
 Результат
@@ -64,7 +64,7 @@ switched to db test_db
 Добавим в коллекцию документов один документ
 
 <pre>
-db.test_db.insert({name: 'Pepe', gender: 'm', weight: 40})
+db.test_collection.insert({name: 'Pepe', gender: 'm', weight: 40})
 </pre>
 
 Результат
@@ -73,7 +73,7 @@ db.test_db.insert({name: 'Pepe', gender: 'm', weight: 40})
 WriteResult({ "nInserted" : 1 })
 </pre>
 
-Снова посмотрим статистику по БД - мы увидим одну созданную коллеккцию:
+Снова посмотрим статистику по БД - мы увидим одну созданную коллекцию:
 <pre>
 db.stats()
 </pre>
@@ -107,13 +107,13 @@ db.getCollectionNames()
 Результат
 
 <pre>
-[ "test_db" ]
+[ "test_collection" ]
 </pre>
 
 Для фильтрации записей используем find (аналог WHERE из SQL)
 
 <pre>
-db.test_db.find({'name': 'Pepe'})
+db.test_collection.find({'name': 'Pepe'})
 </pre>
 
 Результат
@@ -122,12 +122,13 @@ db.test_db.find({'name': 'Pepe'})
 { "_id" : ObjectId("5b56a66a64669cd544d5fd73"), "name" : "Pepe", "gender" : "m", "weight" : 40 }
 </pre>
 
-JSON, который передётся в функцию find называется "селектор". Селектор формирует набор документов из коллекции, которые отвечают уловиям, перечисленным в селектора.
+JSON, который передaётся в функцию find называется "селектор".
+Селектор формирует набор документов из коллекции, которые отвечают уcловиям, перечисленным в селекторе.
 
 Добавим новый документ в коллекцию с отличающимся набором полей:
 
 <pre>
-db.test_db.insert({name: 'Lolo', gender: 'f', home: 'Moscow', student: false})
+db.test_collection.insert({name: 'Lolo', gender: 'f', home: 'Moscow', student: false})
 </pre>
 
 Результат
@@ -138,7 +139,7 @@ WriteResult({ "nInserted" : 1 })
 
 Воспользуемся командой find(), которая является аналогом для SELECT в стандарте SQL.
 <pre>
-db.test_db.find()
+db.test_collection.find()
 </pre>
 
 Результат
@@ -148,11 +149,11 @@ db.test_db.find()
 { "_id" : ObjectId("5b56b32e64669cd544d5fd74"), "name" : "Lolo", "gender" : "f", "home" : "Moscow", "student" : false }
 </pre>
 
-Мы добавили в нашу коллекцию новый домумент с другим набором полей. Такое добавление было бы невозможно в реляционной БД, где набор полей фиксируется в момент создания таблицы.
+Мы добавили в нашу коллекцию новый документ с другим набором полей. Такое добавление было бы невозможно в реляционной БД, где набор полей фиксируется в момент создания таблицы.
 
 Для удаления записей используется функция .remove(), в которую нужно передать селектор
 <pre>
-db.test_db.remove({home: "Moscow"})
+db.test_collection.remove({home: "Moscow"})
 </pre>
 
 Результат
@@ -164,7 +165,7 @@ WriteResult({ "nRemoved" : 1 })
 Проверим, какие элементы остались в коллекции
 
 <pre>
-db.test_db.find()
+db.test_collection.find()
 </pre>
 
 Результат
@@ -176,13 +177,13 @@ db.test_db.find()
 В селекторы можно передавать специальные операторы, которые эквивалентны условиям в WHERE запросов SQL:
 
 <pre>
-db.test_db.find({gender: 'm', weight: {$gt: 700}})
+db.test_collection.find({gender: 'm', weight: {$gt: 700}})
 </pre>
 
 Тут ничего не нашли - это ожидаемо. Поправим условие в селекторе:
 
 <pre>
-db.test_db.find({gender: 'm', weight: {$lt: 700}})
+db.test_collection.find({gender: 'm', weight: {$lt: 700}})
 </pre>
 
 Результат
@@ -193,7 +194,7 @@ db.test_db.find({gender: 'm', weight: {$lt: 700}})
 
 Так, например, оператор $exists проверяет наличие у объекта того или иного поля. Внутри селектора условия можно объединять с помощью оператора $or
 <pre>
-db.test_db.find({$or: [{gender: 'm'}, {home: 'Moscow'}]})
+db.test_collection.find({$or: [{gender: 'm'}, {home: 'Moscow'}]})
 </pre>
 
 Результат
@@ -208,7 +209,7 @@ db.test_db.find({$or: [{gender: 'm'}, {home: 'Moscow'}]})
 Обновление производится функцией update, попробуем её применить
 
 <pre>
-db.test_db.update({home: 'Moscow'},{student: true})
+db.test_collection.update({home: 'Moscow'},{student: true})
 </pre>
 
 Результат
@@ -219,12 +220,12 @@ WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
 
 Проверим, что новый документ появился в коллекции
 <pre>
-db.test_db.find({home: 'Moscow'})
+db.test_collection.find({home: 'Moscow'})
 </pre>
 
 Ничего не нашли, что случилось? Выведем все документы коллекции
 <pre>
-db.test_db.find()
+db.test_collection.find()
 </pre>
 
 Результат
@@ -234,11 +235,11 @@ db.test_db.find()
 { "_id" : ObjectId("5b56b78664669cd544d5fd75"), "student" : true }
 </pre>
 
-Фунция update не просто изменила это поля, а переписала весь документ. Чтобы такого не произошло, нужно использовать модификатор $set
+Функция update не просто изменила это поля, а переписала весь документ. Чтобы такого не произошло, нужно использовать модификатор $set
 
 Вернём нашу запись на место
 <pre>
-db.test_db.insert({name: 'Lolo', gender: 'f', home: 'Moscow', student: false})
+db.test_collection.insert({name: 'Lolo', gender: 'f', home: 'Moscow', student: false})
 </pre>
 
 Результат
@@ -249,7 +250,7 @@ WriteResult({ "nInserted" : 1 })
 
 Проведём правильный update
 <pre>
-db.test_db.update({home: 'Moscow'}, {$set: {student: true}})
+db.test_collection.update({home: 'Moscow'}, {$set: {student: true}})
 </pre>
 
 Результат
@@ -261,7 +262,7 @@ WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
 
 Проверим, что всё успешно
 <pre>
-db.test_db.find()
+db.test_collection.find()
 </pre>
 
 Результат
@@ -276,7 +277,7 @@ db.test_db.find()
 
 Попробуем выполнить update записи, которой нет
 <pre>
-db.test_db.update({home: 'Perm'}, {$set: {student: false}})
+db.test_collection.update({home: 'Perm'}, {$set: {student: false}})
 </pre>
 
 Результат
@@ -287,7 +288,7 @@ WriteResult({ "nMatched" : 0, "nUpserted" : 0, "nModified" : 0 })
 
 Как изменилась коллекция? Никак =[
 <pre>
-db.test_db.find()
+db.test_collection.find()
 </pre>
 
 Результат
@@ -298,7 +299,7 @@ db.test_db.find()
 
 Попробуем функционал UPSERT:
 <pre>
-db.test_db.update({home: 'Perm'}, {$set: {student: false}}, true)
+db.test_collection.update({home: 'Perm'}, {$set: {student: false}}, true)
 </pre>
 
 Результат
@@ -314,7 +315,7 @@ WriteResult({
 
 Проверим, как изменилась коллекция
 <pre>
-db.test_db.find()
+db.test_collection.find()
 </pre>
 
 Результат
@@ -324,7 +325,7 @@ db.test_db.find()
 { "_id" : ObjectId("5b57207bbff183a0a45dcfb3"), "home" : "Perm", "student" : false }
 </pre>
 
-По умолчанию будет обновлён один из документов, попадающих под условия селектора. Чётвёртый параметр команды позволяет осуществлять массовую вставку (обновление) документов.
+По умолчанию будет обновлён один из документов, попадающих под условия селектора. Четвёртый параметр команды позволяет осуществлять массовую вставку (обновление) документов.
 
 Есть другие модификаторы, например $inc (увеличивает скаляр) или $push (добавляет в массив) - о них можно почитать
 в документации по [Mongo](https://docs.mongodb.com/manual/reference/operator/update/)
@@ -553,9 +554,9 @@ db.dogs.aggregate([{$group: {_id: "$status", dog_count: { $sum: 1 }}}])
 
 ## Модификация полей.
 
-Допустим, для предыдущего примера мы хотим посчитать не просто количество документов, а сумму длинн поля $message.
+Допустим, для предыдущего примера мы хотим посчитать не просто количество документов, а сумму длин поля $message.
 
-Для этой задачи потребуется добавить к коллеции новое поле - message_len.
+Для этой задачи потребуется добавить к коллекции новое поле - message_len.
 
 Строки в Mongo - объекты Javascript, то есть у них есть атрибут length. Таким образом нам нужно применить функцию length каждому полю message всех документов коллекции.
 Для этого мы используем метод курсора forEach и вызовем метод update для каждого документа:
