@@ -1,7 +1,8 @@
 version: '2'
 services:
   postgres_host:
-    image: postgres:10-alpine
+    build:
+      context: ./postgres_host
     restart: always
     ports: ["5433:5432"]
     container_name: postgres_host
