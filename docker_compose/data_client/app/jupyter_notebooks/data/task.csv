@@ -1,0 +1,20 @@
+Код,Тема,Компонент,Затрачено в часах
+HYDRA-535,Пробрасывать пользовательское распределение paid_types в ехидну,echidna,1
+HYDRA-534,Гибридный рекомендатель с multi-channel feedback,hydra,3
+HYDRA-532,Джоба в дженкинсе для расчёта динамики РВП,hydramatrices,2
+HYDRA-531,Интеграция Hydra с Gamora,hydramatrices,4
+HYDRA-530,Тестируем интеграцию с Jira,hydra,2
+HYDRA-527,Поправить функцию _get_ui_rec_matrix,hydra,10
+HYDRA-524,Оптимизировать матрицу ItemFactors,hydra,2
+HYDRA-523,Сортировка ЦПБ,hydra,5
+HYDRA-520,Закостылить параметр top,hydra,2
+HYDRA-519,Сделать 'stable' конфигом по умолчанию в Гидре,hydra,2
+HYDRA-518,Неудобно тестировать запись в redis,hydramatrices,1
+HYDRA-517,Улучшить рекомендации (первая итерация),hydra,7
+HYDRA-514,Добавить логирование в скрипты hydra/bin,hydramatrices,5
+HYDRA-513,Поправить storage_backend,hydramatrices,2
+HYDRA-511,Перемешивание рекомендаций для старых пользователей,hydra,5
+HYDRA-510,Поправить скрипты bpr и и оценщика,hydra_utils,16
+HYDRA-509,Динамические персональные рекомендации,hydra,10
+HYDRA-507,Навести порядок в prepare_data_for_hydra,hydramatrices,3
+HYDRA-506,Техдолг по логике /collection/recommendations/,hydra,24
