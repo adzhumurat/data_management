@@ -3,6 +3,7 @@ docker_compose/data_client/app/.cache/*
 docker_compose/data_client/app/.venv/*
 docker_compose/data_client/app/jupyter_notebooks/.ipynb_checkpoints
 docker_compose/data_client/app/service.log
+docker_compose/data_client/app/tokenizers
 data_store/pg_data
 data_store/raw_data
 data_store/mongo_data
