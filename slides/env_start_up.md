@@ -17,6 +17,42 @@
 * С помощью VirtualBox [по этой инструкции](http://profitraders.com/Ubuntu/VirtualBoxUbuntuInstall.html)
 * с помощью ПО VMWare [по этой инструкции](https://www.quora.com/How-do-I-install-Ubuntu-using-VMware-on-Windows-10) или VirtualBox
 
+Я рекомендую [Яндекс.Oблако](https://console.cloud.yandex.ru/), чтобы разгрузить ноутбук от лишней работы.
+Разворачивание Ubuntu в яндекс-оюлаге проходит в несколько простых шагов
+
+### Шаг 1.
+
+Сгенерируте ssh-ключи. Это нужно для подключения к удалённому серверу.
+
+Для пользователей Windows есть [пошаговая инструкция](https://docs.joyent.com/public-cloud/getting-started/ssh-keys/generating-an-ssh-key-manually/manually-generating-your-ssh-key-in-windows)
+
+### Шаг 2.
+
+Регистрация на [Яндекс.Облаке](https://cloud.yandex.ru/), после логина в аккаунт почты Яндекса нужно будет активировать пробный период
+![yandex_cloud_1](./img/yandex_cloud_1.png)
+
+На следующем шаге ввести данные о плательщике и привязать карту (деньги списываться не будут)
+
+![yandex_cloud_2](img/yandex_cloud_2.png)
+
+Когда льготный период активируется - не отвязывайте карту! В этом случае Яндекс спишет начисленные 4к.
+
+После активации льготного периода нужно запустить наш облачный инстанс убунты в облаке в разделе `Compute Cloud`
+
+![yandex_cloud_3](img/yandex_cloud_3.png)
+
+Можно почитать документацию, но лучше сразу переходить к настройке инстанса
+
+![yandex_cloud_4](img/yandex_cloud_4.png)
+
+Тут довольно простые настройки для виртуалки - главное добавить публичный SSH ключ
+
+![yandex_cloud_5](img/yandex_cloud_5.png)
+
+Далее установим утилиты `git`, `docker` и `docker-compose`
+
+## Разворачиваем окружение для обработки данных
+
 После того, как убунта установлена (любым способом), нужно обновить список пакетов. Для этого запустим в консоли команду:
 
 <pre>
@@ -39,7 +75,11 @@ git clone https://github.com/adzhumurat/data_management.git
 </pre>
 
 В рапозитории вы найдёте файл `data_management/data_store/movies_data.zip`, в котором хранятся `csv` и `json` файлы.
-Для работы вам нужно извлечь эти файлы в директорию `data_management/data_store/raw_data` чтобы это сделать запустите команду `python3 data_tools/extract_zipped_data.py -s extract`
+Для работы вам нужно извлечь эти файлы в директорию `data_management/data_store/raw_data` чтобы это сделать запустите команду 
+
+<pre>
+python3 data_tools/extract_zipped_data.py -s extract
+</pre>
 
 Чтобы проверить, как применились изменения выполним в консоли команду 
 <pre>
@@ -48,10 +88,10 @@ ls data_store/raw_data
 
 Результат работы команды - должны увидеть в список файлов, которые только что распаковали
 <pre>
-dogs.json  links.csv  movies_metadata.csv  ratings.csv  tags.json
+dogs.json  links.csv  movies_metadata.csv  ratings.csv events.csv tags.json
 </pre> 
 
-**Справка** команда *ls* "печатает" список файлов в директории, которая хранится в переменной среды *$SOURCE_DATA*, где значок *$* является служебным.
+**Справка** команда *ls* "печатает" список файлов в директории.
 
 **Справка** для работы в консоли будем использовать базовые команды Linux
 
@@ -65,7 +105,7 @@ dogs.json  links.csv  movies_metadata.csv  ratings.csv  tags.json
 
 Для установки системы виртуализации Docker на официальном сайте есть прекрасные пошаговые инструкции для всех основных ОС
 
-* [тут Linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+* [тут Linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-engine---community)
 * [тут MacOS](https://docs.docker.com/docker-for-mac/install/)
 * [тут Windows](https://docs.docker.com/docker-for-windows/install/)
 
@@ -105,7 +145,7 @@ sudo apt-get install docker-compose
 
 ### Запуск MongoDB
 
-Монга будет запущена автоматически (т.к. мы пользуемся docker-compose) - это можно убедится, выполнив команду `docker ps | grep mongo`. Нужно только проверить её работоспособность MongoDB, залив туда данные. 
+Монга будет запущена автоматически (т.к. мы пользуем docker-compose) - в этом можно убедиться, выполнив команду `docker ps | grep mongo`. Нужно только проверить её работоспособность MongoDB, залив туда данные. 
 
 * запускаем импорт документов ` python3 docker_compose/upstart.py -s mongoimport` 
 * стартуем mongo `python3 docker_compose/upstart.py -s mongo`
@@ -187,40 +227,7 @@ docker rmi $(docker images -q)
 
 Jupyter можно развернуть двумя способами
 * локально: вот [инструкция для Windows](https://medium.com/@neuralnets/beginners-quick-guide-for-handling-issues-launching-jupyter-notebook-for-python-using-anaconda-8be3d57a209b)
-* с помощью сервиса [Яндекс Облако](https://cloud.yandex.ru/)
-
-Я рекомендую яндекс-облако, чтобы разгрузить ноутбук от лишней работы
-
-## Шаг 1.
-
-Сгенерируте ssh-ключи. Это нужно для подключения к удалённому серверу.
-
-Для пользователей Windows есть [пошаговая инструкция](https://docs.joyent.com/public-cloud/getting-started/ssh-keys/generating-an-ssh-key-manually/manually-generating-your-ssh-key-in-windows)
-
-## Шаг 2.
-
-Регистрация на [Яндекс.Облаке](https://cloud.yandex.ru/), после логина в аккаунт почты Яндекса нужно будет активировать пробный период
-![yandex_cloud_1](./img/yandex_cloud_1.png)
-
-На следующем шаге ввести данные о плательщике и привязать карту (деньги списываться не будут)
-
-![yandex_cloud_2](img/yandex_cloud_2.png)
-
-Когда льготный период активируется - отвяжите карту
-
-После активации льготного периода нужно активировать инстанс убунты в облаке в разделе `Compute Cloud`
-
-![yandex_cloud_3](img/yandex_cloud_3.png)
-
-Можно почитать документацию, но лучше сразу переходить к настройке инстанса
-
-![yandex_cloud_4](img/yandex_cloud_4.png)
-
-Тут довольно простые настройки для виртуалки - главное добавить публичный SSH ключ
-
-![yandex_cloud_5](img/yandex_cloud_5.png)
-
-Далее нужно применить все настройки из первого пункта этой статьи - установить `git`, `docker` и `docker-compose`
+* с помощью Docker: я рекомендую именно этот вариант
 
 Когда всё установим - нужно собрать докер-контейнер c python командой
 
