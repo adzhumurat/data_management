@@ -181,6 +181,80 @@ sudo docker rm $(sudo docker ps -a -q)
 docker rmi $(docker images -q)
 </pre>
 
+# Jupyter
+
+Для курса по анализу данных потребуется Jupyter notebook
+
+Jupyter можно развернуть двумя способами
+* локально: вот [инструкция для Windows](https://medium.com/@neuralnets/beginners-quick-guide-for-handling-issues-launching-jupyter-notebook-for-python-using-anaconda-8be3d57a209b)
+* с помощью сервиса [Яндекс Облако](https://cloud.yandex.ru/)
+
+Я рекомендую яндекс-облако, чтобы разгрузить ноутбук от лишней работы
+
+## Шаг 1.
+
+Сгенерируте ssh-ключи. Это нужно для подключения к удалённому серверу.
+
+Для пользователей Windows есть [пошаговая инструкция](https://docs.joyent.com/public-cloud/getting-started/ssh-keys/generating-an-ssh-key-manually/manually-generating-your-ssh-key-in-windows)
+
+## Шаг 2.
+
+Регистрация на [Яндекс.Облаке](https://cloud.yandex.ru/), после логина в аккаунт почты Яндекса нужно будет активировать пробный период
+![yandex_cloud_1](./img/yandex_cloud_1.png)
+
+На следующем шаге ввести данные о плательщике и привязать карту (деньги списываться не будут)
+
+![yandex_cloud_2](img/yandex_cloud_2.png)
+
+Когда льготный период активируется - отвяжите карту
+
+После активации льготного периода нужно активировать инстанс убунты в облаке в разделе `Compute Cloud`
+
+![yandex_cloud_3](img/yandex_cloud_3.png)
+
+Можно почитать документацию, но лучше сразу переходить к настройке инстанса
+
+![yandex_cloud_4](img/yandex_cloud_4.png)
+
+Тут довольно простые настройки для виртуалки - главное добавить публичный SSH ключ
+
+![yandex_cloud_4](img/yandex_cloud_5.png)
+
+Далее нужно применить все настройки из первого пункта этой статьи - установить `git`, `docker` и `docker-compose`
+
+Когда всё установим - нужно собрать докер-контейнер c python командой
+
+<pre>
+python3 docker_compose/upstart.py -s pipenv
+</pre>
+
+Затем запустить jupyter командой
+<pre>
+python3 docker_compose/upstart.py -s jupyter
+</pre>
+
+И выяснить токен для логина в Jupyter в логах контейнера `datamng_service-app`
+<pre>
+adzhumurat@mai-service:~$ docker logs e60845312ab6
+[I 19:14:44.024 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 19:14:44.027 NotebookApp] 
+    To access the notebook, open this file in a browser:
+        file:///root/.local/share/jupyter/runtime/nbserver-6-open.html
+    Or copy and paste one of these URLs:
+        http://e60845312ab6:8888/?token=94baa30af6bc700c4f39aeaa072ed63157ec46278cd0b17c
+     or http://127.0.0.1:8888/?token=94baa30af6bc700c4f39aeaa072ed63157ec46278cd0b17c
+</pre>
+
+Прокидываем порты на локальную машину
+
+<pre>
+ssh -NL 8890:localhost:8889 adzhumurat@84.201.133.48
+</pre>
+
+Открываем в браузере `localhost:8890` - там будет запущен Jupyter формой ввода токена.
+
+Готово! Вы великолепны
+
 # Ubuntu Google Cloud
 
 Как установить - по инструкции отсюда: https://cloud.google.com/compute/docs/quickstart-linux
