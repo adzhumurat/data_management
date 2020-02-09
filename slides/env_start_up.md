@@ -218,7 +218,7 @@ Jupyter можно развернуть двумя способами
 
 Тут довольно простые настройки для виртуалки - главное добавить публичный SSH ключ
 
-![yandex_cloud_4](img/yandex_cloud_5.png)
+![yandex_cloud_5](img/yandex_cloud_5.png)
 
 Далее нужно применить все настройки из первого пункта этой статьи - установить `git`, `docker` и `docker-compose`
 
@@ -254,6 +254,15 @@ ssh -NL 8890:localhost:8889 adzhumurat@84.201.133.48
 Открываем в браузере `localhost:8890` - там будет запущен Jupyter формой ввода токена.
 
 Готово! Вы великолепны
+
+Отвязать карту не совсем тривиальный процесс. Для этого надо перейти в [Яндекс.Папорт](https://passport.yandex.ru/profile),
+ отмотать до середины страницы и кликнуть "Отвязать карту"
+ 
+![yandex_cloud_6](img/yandex_cloud_6.png)
+
+Потом вернуться на страницу [биллинга Яндекс.Облако](https://console.cloud.yandex.ru/billing/accounts) и проверить, что карта отвязана
+ 
+![yandex_cloud_7](img/yandex_cloud_7_.png)
 
 # Ubuntu Google Cloud
 
