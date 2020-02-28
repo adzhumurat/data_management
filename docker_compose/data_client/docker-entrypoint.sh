@@ -2,7 +2,7 @@
 
 case "$1" in
   load)
-    bash load_data.sh
+    pipenv run python3 load_data.py
     ;;
   pipenv)
     pipenv install --deploy

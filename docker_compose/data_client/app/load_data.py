@@ -63,5 +63,5 @@ if __name__=='__main__':
     fill_table('movie', 'links')
     fill_table('movie', 'ratings')
     fill_table('movie', 'events')
-    create_user(cursor, username='guzel', userpass='guzel')
+    create_user(cursor, username='mai', userpass='1930')
     conn.commit()
