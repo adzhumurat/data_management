@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_cursor():
-    logger.info("Создаём подключёние к Postgres")
+    logger.info("Создаём подключение к Postgres")
     params = {
         "host": os.environ['APP_POSTGRES_HOST'],
         "port": os.environ['APP_POSTGRES_PORT'],
@@ -26,6 +26,7 @@ def get_cursor():
         psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
     )
     cursor = conn.cursor()
+    logger.info(f"Подключено: {cursor}")
     return conn, cursor
 
 
@@ -33,6 +34,7 @@ def fill_table(schema, table):
     with open(f'/usr/share/data_store/raw_data/{table}.csv', 'r') as f:
         sql = f"COPY {schema}.{table} FROM STDIN DELIMITER ',' CSV HEADER"
         cursor.copy_expert(sql, f)
+        logger.info(f'загружаем {schema}.{table}')
 
 def user_exist(psql_cursor, username):
     sql_str = f"SELECT 1 FROM pg_roles WHERE rolname='{username}'"
