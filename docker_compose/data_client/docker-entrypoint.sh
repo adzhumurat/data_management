@@ -16,7 +16,7 @@ case "$1" in
     psql -h postgres_host -U postgres
     ;;
   test)
-    psql -h postgres_host -U postgres -c 'SELECT COUNT(*) as cnt FROM ratings'
+    psql -h postgres_host -U postgres -c 'SELECT COUNT(*) as cnt FROM movie.ratings'
     ;;
   mongo)
     /usr/bin/mongo ${APP_MONGO_HOST}:${APP_MONGO_PORT}
