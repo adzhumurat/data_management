@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 # Задание по Psycopg2
 # --------------------------------------------------------------
 
-logger.info("Создаём подключёние к Postgres")
+logger.info("Создаём подключение к Postgres")
 params = {
     "host": os.environ['APP_POSTGRES_HOST'],
     "port": os.environ['APP_POSTGRES_PORT'],
