@@ -61,7 +61,7 @@ curl -s "http://youservice/rates/uid"
 
 # Реализация
 
-Код проекта вы найдёте по адресу `docker_compose/data_client/app/src/simple_services.py
+Код проекта вы найдёте в файле [../../docker_compose/data_client/app/src/simple_service.py](docker_compose/data_client/app/src/simple_service.py)
 
 * старт веб-сервиса  `docker-compose --project-name data-prj -f docker-compose.yml run -p 5001:5000 --rm -d --name env-app service-app service`
 * с помощью `docker ps` убедитесь, что запустился контейнер `env-app`
