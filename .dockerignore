@@ -2,3 +2,4 @@ data_store/
 data_tools/
 slides/
 docker_compose/data_client/app/
+docker_compose/data_client/app/.cache
