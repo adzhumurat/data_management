@@ -8,3 +8,5 @@ data_store/pg_data
 data_store/raw_data
 data_store/mongo_data
 data_store/redis_data
+docker_compose/jupyter_notebooks/tokenizers/
+docker_compose/jupyter_notebooks/.ipynb_checkpoints/
