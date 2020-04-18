@@ -4,7 +4,7 @@
 Для начала нужно запустить контейнер `service-app` и подключиться в сеанс `psql` с помощью команды
 
 <pre>
-python3 docker_compose/upstart.py -s psql
+python3 upstart.py -s psql
 </pre>
 
 Если всё прошло успешно, мы увидим приглашение интерактивной сессии Postgres клиента:

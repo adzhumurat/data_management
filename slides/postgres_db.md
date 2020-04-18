@@ -2,7 +2,7 @@
 
 Перед проведением экспериментов нужно запустить контейнер с подключением к PostgreSQL
  <pre>
- python3 docker_compose/upstart.py -s psql
+ python3 upstart.py -s psql
  </pre>
 
 ## Массивы

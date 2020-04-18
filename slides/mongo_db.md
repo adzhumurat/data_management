@@ -3,7 +3,7 @@
 Подключение к Mongo-серверу осуществляется с помощью утилиты Mongo (в докер-контейнере она уже установлена)
 
 <pre>
-python3 docker_compose/upstart.py -s mongo
+python3 upstart.py -s mongo
 </pre>
 
 Результат
