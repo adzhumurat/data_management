@@ -1,7 +1,7 @@
 .idea/
 docker_compose/data_client/app/.cache/*
 docker_compose/data_client/app/.venv/*
-docker_compose/data_client/app/service.log
+docker_example/data/service.log
 data_store/pg_data
 data_store/raw_data
 data_store/mongo_data

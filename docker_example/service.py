@@ -6,20 +6,23 @@
 Проверяем работоспособность:
     curl http://127.0.0.1:5000/
 """
-import numpy as np
-import http.server
 import json
+import http.server
+import logging
 import os
 import pickle
 import socketserver
 import sys
 from http import HTTPStatus
 from re import compile
-import logging
+
+import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 
 # файл, куда посыпятся логи модели
-logging.basicConfig(filename="/www/classifier/data/service.log", level=logging.INFO)
+
+LOG_FORMAT = '%(asctime)s | %(levelname)-8s | %(filename)-25.25s:%(lineno)-4d | %(message)s'
+logging.basicConfig(filename="/www/classifier/data/service.log", level=logging.INFO, format=LOG_FORMAT)
 
 
 def parse_params(params) -> dict:

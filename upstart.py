@@ -21,12 +21,16 @@ if __name__ == '__main__':
         sh_command = f'{simple_run} {args.scenario}'
     elif args.scenario == 'down':
         sh_command = f'{docker_compose} {args.scenario}'
-    elif args.scenario == 'jupyter':
+    elif args.scenario == 'jupyter-full':
         sh_command = f'{docker_compose} run -d -p 8889:8888 {docker_compose_postfix} {args.scenario}'
+    elif args.scenario == 'jupyter':
+        sh_command = f'{docker_compose} run -d -p 8889:8888 --rm --name {PROJECT_NAME}_jupyter jupyter-app {args.scenario}'
     elif args.scenario == 'service':
         sh_command = f'{docker_compose} run -d -p 5001:5000 {docker_compose_postfix} {args.scenario}'
     elif args.scenario == 'docker':
         sh_command = f'{docker_compose} build {MAIN_SERVICE_NAME}'
+    elif args.scenario == 'docker-jupyter':
+        sh_command = f'{docker_compose} build jupyter-app'
     else:
         raise ValueError('Ошибочный сценарий: %s' % args.scenario)
     print(sh_command)
