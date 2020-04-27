@@ -21,4 +21,6 @@ clf.fit(X, y)
 with open('clf.pkl', 'wb') as f:
     pickle.dump(clf, f)
     logging.info('Модель обучена и сохранена в %s' % Path().absolute())
+with open('data/clf.pkl', 'wb') as f:
+    pickle.dump(clf, f)
 print(f"Модель обучена! Лог: {log_filename}")

@@ -44,6 +44,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().__init__(*args, **kwargs)
 
     def get_response(self) -> dict:
+        """Пример запроса
+        
+        http://0.0.0.0:5000/classifier/?x1=1&x2=-2.2&x3=1.05
+        """
         response = {'ping': 'ok'}
         params_parsed = self.path.split('?')
         if len(params_parsed) == 2 and self.path.startswith('/classifier'):
