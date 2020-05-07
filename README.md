@@ -27,4 +27,6 @@
 * [Методы обучения моделей: регуляризация, градиентный спуск](./jupyter_notebooks/V_machine_learning_tuning.ipynb)
     * [Домашняя работа: реализуем градиентный спуск с регуляризацией](./jupyter_notebooks/V_machine_learning_tuning.ipynb)
 * [Машинное обучение в продакшн. Рекомендательные системы](./jupyter_notebooks/VI_machine_learning_production.ipynb)
-    * [Домашняя работа: изучаем пакет implicit](./jupyter_notebooks/VI_machine_learning_production.ipynb)
+    * [Домашняя работа: изучаем пакет implicit в задаче построения рекомендательных систем](./jupyter_notebooks/VI_machine_learning_production.ipynb)
+
+![slides/img/ivi_logo.png](slides/img/ivi_logo.png)
