@@ -7,8 +7,11 @@
 * [Подготовка машины к работе](./slides/env_start_up.md)
 * [Ведение в базы данных](./slides/database_intro.md)
 * [Язык запросов SQL](./slides/sql_language.md)
+    * [Домашняя работа: создание и модификация таблиц](./slides/hw/hw1.md)
+    * [Домашняя работа: SQL запросы](./slides/hw/hw2.md)
 * [Работа с Postgres](./slides/postgres_db.md)
 * [Нереляционные СУБД: MongoDB](./slides/mongo_db.md)
+    * [Домашняя работа: работа с MongoDB](./slides/hw/hw2.md)
 
 
 ## Курс "Анализ данных"

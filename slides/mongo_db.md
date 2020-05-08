@@ -474,10 +474,15 @@ head test.json;
 
 **ВНИМАНИЕ** Генерировать файл не надо, он уже есть в исходном наборе
 
+Подключаемся в `bash` терминал контейнера
+```shell
+python3 upstart.py -s bash
+```
+
 Загрузим файл в Mongo с помощью утилиты mongoimport:
 
 ```json
-/usr/bin/mongoimport --host ${APP_MONGO_HOST} --port ${APP_MONGO_PORT} --db pets --collection dogs --file /usr/share/raw_data/dogs.json
+/usr/bin/mongoimport --host ${APP_MONGO_HOST} --port ${APP_MONGO_PORT} --db pets --collection dogs --file /usr/share/data_store/raw_data/dogs.json
 ```
 
 Результат выполнения команды
@@ -486,9 +491,8 @@ head test.json;
 2019-10-27T15:50:25.999+0000    imported 100 documents
 ```
 
-Проверим, что документы успешно загружены, подключившись к Mongo ` /usr/bin/mongo ${APP_MONGO_HOST}:${APP_MONGO_PORT}/pets`:
-```json
-use pets
+Проверим, что документы успешно загружены, подключившись к Mongo командой `/usr/bin/mongo ${APP_MONGO_HOST}:${APP_MONGO_PORT}/pets`:
+```python
 db.stats()
 ```
 
@@ -514,7 +518,6 @@ db.stats()
 
 Посмотрим на записи, которые появились в таблице
 ```json
-use pets
 db.dogs.find().limit(3)
 ```
 
@@ -533,12 +536,17 @@ db.dogs.find().limit(3)
 { $group: { _id: <expression>, <field1>: { <accumulator1> : <expression1> }, ... } }
 ```
 
-Этот модификатор оборачивается в конструкцию *db.dogs.aggregate([])*
+Этот модификатор оборачивается в конструкцию `db.dogs.aggregate([])`
 
-Применим к нашей игрушечной таблице
+Подключаемся в Mongo
 
 ```json
 /usr/bin/mongo ${APP_MONGO_HOST}:${APP_MONGO_PORT}/pets
+```
+
+Применим к нашей игрушечной таблице `aggregate()`:
+
+```python
 db.dogs.aggregate([{$group: {_id: "$status"}}])
 ```
 
@@ -560,7 +568,7 @@ db.dogs.aggregate([{$group: {_id: "$status", dog_count: { $sum: 1 }}}])
 
 Для этой задачи потребуется добавить к коллекции новое поле - message_len.
 
-Строки в Mongo - объекты Javascript, то есть у них есть атрибут length. Таким образом нам нужно применить функцию length каждому полю message всех документов коллекции.
+Строки в Mongo - объекты Javascript, то есть у них есть атрибут `length`. Таким образом нам нужно применить функцию length каждому полю message всех документов коллекции.
 Для этого мы используем метод курсора forEach и вызовем метод update для каждого документа:
 
 ```json
