@@ -85,89 +85,89 @@ SELECT pg_size_pretty(pg_database_size(current_database()));
 
 Команда формирует список таблиц, которые были созданы пользователем
 
-<pre>
+```sql
 SELECT table_name FROM information_schema.tables WHERE table_schema NOT IN ('information_schema','pg_catalog');
-</pre>
+```
 
 Результат:
 
-<pre>
+```shell
  table_name
 ------------
  links
  ratings
 (2 rows)
-</pre>
+```shell
 
 Описание таблицы можно получить при помощи команды \d
 
-<pre>
+```shell
 \d ratings
-</pre>
+```
 
 Результат:
 
-<pre>
-                    Table "public.ratings"
+```sql
+                    Table "movie.ratings"
   Column   |       Type       | Collation | Nullable | Default
 -----------+------------------+-----------+----------+---------
  userid    | bigint           |           |          |
  movieid   | bigint           |           |          |
  rating    | double precision |           |          |
  timestamp | bigint           |           |          |
-
-</pre>
+```
 
 Можно узнать размер таблицы
 
-<pre>
-SELECT pg_size_pretty(pg_relation_size('ratings'));
-</pre>
+```sql
+SELECT pg_size_pretty(pg_relation_size('movie.ratings'));
+```
 
 Результат:
 
-<pre>
+```sql
  pg_size_pretty
 ----------------
- 2990 MB
+ 45 MB
 (1 row)
-</pre>
+```
 
 Или полный размер данных (вместе с индексами и т.д.)
 
-<pre>
-SELECT pg_size_pretty(pg_total_relation_size('ratings'));
-</pre>
+```sql
+SELECT pg_size_pretty(pg_total_relation_size('movie.ratings'));
+```
 
 Результат:
 
-<pre>
+```sql
  pg_size_pretty
 ----------------
- 2991 MB
+ 45 MB
 (1 row)
-</pre>
+```
 
 Размер данных в конкретном столбце
 
-<pre>
-SELECT pg_size_pretty(SUM(pg_column_size(userId))) FROM ratings;
-</pre>
+```sql
+SELECT pg_size_pretty(SUM(pg_column_size(userId)))
+FROM movie.ratings;
+```
 
 Результат:
 
-<pre>
+```sql
  pg_size_pretty
 ----------------
  397 MB
 (1 row)
-</pre>
+```
 
 ## Администрирование и мониторинг
 
 Запрос, который выводит информацию об активных запросах.
 
-<pre>
+```sql
 SELECT
     pid,
     age(query_start, clock_timestamp()),
@@ -176,11 +176,11 @@ FROM pg_stat_activity
 WHERE
     query != '<IDLE>'
     AND query NOT ILIKE '%pg_stat_activity%';
-</pre>
+```
 
 Результат:
 
-<pre>
+```sql
  pid | age | usename  | query |    backend_type
 -----+-----+----------+-------+---------------------
   66 |     |          |       | autovacuum launcher
@@ -189,43 +189,43 @@ WHERE
   63 |     |          |       | checkpointer
   65 |     |          |       | walwriter
 (5 rows)
-</pre>
+```
 
 
 Если запрос висит слишком долго, его стоит прибить командой
 
-<pre>
+```sql
 SELECT pg_terminate_backend(procpid);
-</pre>
+```
 
 С помощью команды \timing можно определить время выполнения запроса
 
-<pre>
+```sql
 \timing
-</pre>
+```
 
 Результат:
 
-<pre>
+```sql
 Timing is on.
-</pre>
+```
 
 Сформируем запрос:
 
-<pre>
+```sql
 SELECT
     movieId,
     COUNT(*) num_rating
-FROM public.ratings
+FROM movie.ratings
 WHERE
     ratings.movieID > 100000
 GROUP BY 1
 LIMIT 10;
-</pre>
+```
 
 Результат:
 
-<pre>
+```sql
  movieid | num_rating
 ---------+------------
   100001 |          2
@@ -241,50 +241,57 @@ LIMIT 10;
 (10 rows)
 
 Time: 1494.318 ms (00:01.494)
-</pre>
+```
 
 ## Ускорение запросов: индексы
 
 Ускорить запрос можно с помощью создания индексов. Индексы можно создавать на лету
 
-<pre>
-CREATE INDEX ON ratings(movieId);
-</pre>
+```sql
+CREATE INDEX ON movie.ratings(movieId);
+```
 
 Результат:
 
-<pre>
+```shell
 Time: 37427.672 ms (00:37.428)
-</pre>
+```
 
 После того, как индекс создан - запросы начинают выполнятся бодрее, время сокращается в сотни раз
-<pre>
-CREATE INDEX ON ratings(movieId);
-</pre>
 
-Результат:
-
-<pre>
-CREATE INDEX
-Time: 38493.878 ms (00:38.494)
-</pre>
-
-Выполним запрос ещё раз:
-
-<pre>
+```sql
 SELECT
     movieId,
     COUNT(*) num_rating
-FROM public.ratings
+FROM movie.ratings
+WHERE
+    ratings.movieID > 100000
+GROUP BY 1
+```
+
+Результат:
+
+```sql
+CREATE INDEX
+Time: 38493.878 ms (00:38.494)
+```
+
+Выполним запрос ещё раз:
+
+```sql
+SELECT
+    movieId,
+    COUNT(*) num_rating
+FROM movie.ratings
 WHERE
     ratings.movieID > 100000
 GROUP BY 1
 LIMIT 10;
-</pre>
+```
 
 Результат:
 
-<pre>
+```sql
  movieid | num_rating
 ---------+------------
   100001 |          2
@@ -300,13 +307,13 @@ LIMIT 10;
 (10 rows)
 
 Time: 5.289 ms
-</pre>
+```
 
 ## Хранимые процедуры
 
 Хранимые процедуры - это функции, которые определяются пользователем. Их можно создавать  для более гибкого препроцессинга данных.
 
-<pre>
+```sql
 CREATE OR REPLACE FUNCTION
     imdb_url(imdb_id VARCHAR)
 RETURNS VARCHAR AS
@@ -318,24 +325,26 @@ $$
     END;
 $$
 LANGUAGE plpgsql;
-</pre>
+```
 
 Результат:
 
-<pre>
+```sql
 CREATE FUNCTION
 Time: 3.637 ms
-</pre>
+```
 
 Применяем функцию:
 
-<pre>
-SELECT imdb_url(links.imdbId) FROM public.links LIMIT 10;
-</pre>
+```sql
+SELECT imdb_url(movie.links.imdbId)
+FROM movie.links
+LIMIT 10;
+```
 
 Результат:
 
-<pre>
+```sql
           imdb_url
 -----------------------------
  http://www.imdb.com/0114709
@@ -351,7 +360,7 @@ SELECT imdb_url(links.imdbId) FROM public.links LIMIT 10;
 (10 rows)
 
 Time: 1.478 ms
-</pre>
+```
 
 Мы создали хранимую процедуру, в которой приклеиваем к id оставшуюся часть URL. Хранимые процедуры можно делать и более сложными и использовать их  для препроцессинга данных, или внутри триггеров.
 
@@ -359,21 +368,21 @@ Time: 1.478 ms
 
 Оператор EXPLAIN демонстрирует этапы выполнения запроса и может быть использован для оптимизации.
 
-<pre>
+```sql
 EXPLAIN
 SELECT
     userId, COUNT(*) num_rating
-FROM public.links
-LEFT JOIN public.ratings
+FROM movie.links
+LEFT JOIN movie.ratings
     ON links.movieid=ratings.movieid
 GROUP BY 1
 LIMIT 10;
-</pre>
+```
 
 Результат:
 
-<pre>
-                                      QUERY PLAN
+```sql
+                              QUERY PLAN
 --------------------------------------------------------------------------------------
  Limit  (cost=1880431.03..1880431.13 rows=10 width=16)
    ->  HashAggregate  (cost=1880431.03..1880749.83 rows=31880 width=16)
@@ -382,8 +391,7 @@ LIMIT 10;
                Hash Cond: (ratings.movieid = links.movieid)
                ->  Seq Scan on ratings  (cost=0.00..903196.76 rows=52048576 width=16)
                ->  Hash  (cost=750.43..750.43 rows=45843 width=8)
-
-</pre>
+```
 
 
 ## Data import/export
@@ -395,23 +403,30 @@ ETL (Extract, Transform, Load) - общее название для процес
 
 Загружать данные в Postgres можно из CSV файлов, ниже пример который загружает данные из csv:
 
+Тут надо переключиться из `psql`  терминал **bash**:
+
+```shell
+python3 upstart.py -s bash
+```
+
 На первом этапе создаём табличку с данными
 
-<pre>
-psql -c '
+```shell
+psql --host $APP_POSTGRES_HOST -U postgres -c '
   CREATE TABLE IF NOT EXISTS ratings (
     userId bigint,
     movieId bigint,
     rating float(25),
     timestamp bigint
   );'
-</pre>
+```
 
 И на втором этапе заливаем CSV в созданную таблицу:
 
-<pre>
-psql -c "\\copy ratings FROM '/data/ratings.csv' DELIMITER ',' CSV HEADER"
-</pre>
+```shell
+psql  --host $APP_POSTGRES_HOST -U postgres \
+-c "\\copy ratings FROM '/usr/share/data_store/raw_data/ratings.csv' DELIMITER ',' CSV HEADER"
+```
 
 Примечание: перед тем, как загружать данные, нужно очень внимательно изучить csv файл - чтобы точно узнать типы данных и их размерности
 
@@ -419,9 +434,10 @@ psql -c "\\copy ratings FROM '/data/ratings.csv' DELIMITER ',' CSV HEADER"
 
 Выгрузку данных можно производить с помощью команды copy
 
-<pre>
-\copy (SELECT * FROM ratings LIMIT 100) TO 'ratings_file.csv' WITH CSV HEADER DELIMITER as ',';
-</pre>
+```shell
+psql  --host $APP_POSTGRES_HOST -U postgres \
+-c "\\copy (SELECT * FROM ratings LIMIT 100) TO '/usr/share/data_store/raw_data/ratings_file.csv' WITH CSV HEADER DELIMITER as ',';"
+```
 
 ETL процессы позволяют использовать Postgres (или другие БД) как средство вычисления: получаем данные, обрабатываем внутри Postgres используя мощный движок вычислений и выгружаем результат для дальнейшего использования - например, в алгоритмах машинного обучения.
 
@@ -434,16 +450,18 @@ ETL процессы позволяют использовать Postgres (ил�
 
 Для создания дампов в Postgres используется утилита [pg_dump](https://postgrespro.ru/docs/postgresql/9.6/app-pgdump)
 
-<pre>
-pg_dump -h $APP_POSTGRES_HOST -U postgres -t ratings_parted > ratings_parted_dump.sql
-</pre>
+```shell
+pg_dump -h $APP_POSTGRES_HOST \
+-U postgres \
+-t public.ratings > /usr/share/data_store/raw_data/ratings_parted_dump.sql
+```
 
 
 Восстановление из дампа происходит аналогично
 
-<pre>
+```shell
 psql -h $APP_POSTGRES_HOST -U postgres dbname < ratings_parted_dump.sql
-</pre>
+```
 
 В промышленных системах дамп базы - это регулярная задача, требующая автоматизации.
 
@@ -452,61 +470,66 @@ psql -h $APP_POSTGRES_HOST -U postgres dbname < ratings_parted_dump.sql
 Шардинг (иногда шардирование) — техника работы с данными, суть которой в разделении (партиционирование) данных на
 отдельные части (по отдельным серверам или отдельным таблицам)
 
+Находясь в контейнере, подключимся к psql
+```
+psql -h $APP_POSTGRES_HOST -U postgres
+```
+
 Создаём партиционированную таблицу с рейтингами
 
-<pre>
+```sql
 CREATE TABLE ratings_parted (
     userId bigint,
     movieId bigint,
     rating float(25),
     timestamp bigint
 );
-</pre>
+```
 
 Создаём шард -табличку с ограничениями на одно из полей - ключ шарда.
 
-<pre>
+```sql
 CREATE TABLE ratings_parted_0 (
     CHECK ( userId % 10 = 0 )
 ) INHERITS (ratings_parted);
-</pre>
+```
 
 Чтобы заливка происходила правильно, нужно создать дополнительное правило-триггер
-<pre>
+```sql
 CREATE RULE ratings_insert_0 AS ON INSERT TO ratings_parted
 WHERE ( userId % 10 = 0 )
 DO INSTEAD INSERT INTO ratings_parted_0 VALUES ( NEW.* );
-</pre>
+```
 
 Проверим, как все работает
-<pre>
+```sql
 INSERT INTO ratings_parted (
     SELECT *
     FROM ratings
     WHERE userid=10
 );
-</pre>
+```
 
 Проверяем результат
-<pre>
+```sql
 SELECT COUNT (*)
 FROM ratings_parted
-</pre>
+```
 
 
 Ещё одна проверка
-<pre>
+```sql
 SELECT COUNT (*)
 FROM ratings_parted_0
-</pre>
+```
 
 Загадка: что будет, если выполнить запрос
-<pre>
+```sql
 INSERT INTO ratings_parted (
     SELECT *
     FROM ratings
     WHERE userid=11
 );
-</pre>
+```
 
 Аналогичным образом таблицы можно разнести по разным инстансам БД.
