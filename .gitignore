@@ -8,3 +8,4 @@ data_store/mongo_data
 data_store/redis_data
 jupyter_notebooks/tokenizers/
 jupyter_notebooks/.ipynb_checkpoints/
+spark_example/data/
