@@ -74,7 +74,7 @@ sudo apt-get install python-pip unzip git;
 git clone https://github.com/adzhumurat/data_management.git
 ```
 
-В рапозитории вы найдёте файл `data_management/data_store/movies_data.zip`, в котором хранятся `csv` и `json` файлы.
+В репозитории вы найдёте файл `data_management/data_store/raw_data.zip`, в котором хранятся `csv` и `json` файлы.
 Для работы вам нужно извлечь эти файлы в директорию `data_management/data_store/raw_data` чтобы это сделать запустите команду 
 
 ```shell
