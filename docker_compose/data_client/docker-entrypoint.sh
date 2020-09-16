@@ -4,6 +4,9 @@ case "$1" in
   load)
     pipenv run python3 load_data.py
     ;;
+  reload)
+    pipenv run python3 load_data.py -r
+    ;;
   pipenv)
     pipenv install --deploy
     chmod -R 777 ./.venv

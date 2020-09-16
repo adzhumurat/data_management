@@ -17,7 +17,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-s', '--scenario', dest='scenario', required=True, help='Сценарий работы')
     args = parser.parse_args()
-    if args.scenario in ('pipenv', 'bash', 'psql', 'load', 'test', 'mongo', 'mongoimport'):
+    if args.scenario in ('pipenv', 'bash', 'psql', 'load', 'reload', 'test', 'mongo', 'mongoimport'):
         sh_command = f'{simple_run} {args.scenario}'
     elif args.scenario == 'down':
         sh_command = f'{docker_compose} {args.scenario}'
