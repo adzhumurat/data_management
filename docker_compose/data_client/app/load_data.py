@@ -2,6 +2,7 @@ import os
 import psycopg2
 import psycopg2.extensions
 import logging
+import sys
 
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
@@ -23,14 +24,19 @@ def get_cursor():
         conn
     )
     conn.set_isolation_level(
-        psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
+        psycopg2.extensions.ISOLATION_LEVEL_READ_COMMITTED
     )
     cursor = conn.cursor()
     logger.info(f"Подключено: {cursor}")
     return conn, cursor
 
 
-def fill_table(schema, table):
+def fill_table(schema, table, truncate):
+    if truncate:
+        logger.info(f"Очистка {schema}.{table}")
+        truncate_sql = f"TRUNCATE TABLE {schema}.{table}"
+        cursor.execute(truncate_sql)
+        logger.info(f"{schema}.{table} очищена")
     with open(f'/usr/share/data_store/raw_data/{table}.csv', 'r') as f:
         sql = f"COPY {schema}.{table} FROM STDIN DELIMITER ',' CSV HEADER"
         cursor.copy_expert(sql, f)
@@ -60,10 +66,13 @@ def create_user(psql_cursor, username, userpass):
         """)
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     conn, cursor = get_cursor()
-    fill_table('movie', 'links')
-    fill_table('movie', 'ratings')
-    fill_table('movie', 'events')
+    truncate = False
+    if len(sys.argv) > 1 and sys.argv[1] == '-r':
+        truncate = True
+    fill_table('movie', 'links', truncate)
+    fill_table('movie', 'ratings', truncate)
+    fill_table('movie', 'events', truncate)
     create_user(cursor, username='mai', userpass='1930')
     conn.commit()
