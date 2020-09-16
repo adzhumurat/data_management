@@ -5,14 +5,16 @@ DROP TABLE IF EXISTS movie.links, postgres.movie.ratings, postgres.movie.events;
 CREATE TABLE movie.links (
     movieId bigint,
     imdbId varchar(400),
-    tmdbId varchar(400)
+    tmdbId varchar(400),
+    primary key (movieId)
 );
 
 CREATE TABLE movie.ratings (
     userId bigint,
     movieId bigint,
     rating float(25),
-    timestamp bigint
+    timestamp bigint,
+    primary key (userId, movieId)
 );
 
 CREATE TABLE movie.events (

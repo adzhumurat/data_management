@@ -2,6 +2,7 @@ import os
 import psycopg2
 import psycopg2.extensions
 import logging
+import sys
 
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
@@ -23,7 +24,7 @@ def get_cursor():
         conn
     )
     conn.set_isolation_level(
-        psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
+        psycopg2.extensions.ISOLATION_LEVEL_READ_COMMITTED
     )
     cursor = conn.cursor()
     logger.info(f"Подключено: {cursor}")
