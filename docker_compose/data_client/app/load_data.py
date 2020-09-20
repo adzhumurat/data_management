@@ -30,11 +30,42 @@ def get_cursor():
     return conn, cursor
 
 
+def get_table_columns(schema, table):
+    get_table_columns_query = f"""
+    SELECT column_name
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_SCHEMA = '{schema}' AND TABLE_NAME = '{table}';
+    """
+    cursor.execute(get_table_columns_query)
+    return [c[0] for c in cursor.fetchall()]
+
+
 def fill_table(schema, table):
+    columns = get_table_columns(schema, table)
+    columns_without_id = [c for c in columns if c != 'id']
+
     with open(f'/usr/share/data_store/raw_data/{table}.csv', 'r') as f:
-        sql = f"COPY {schema}.{table} FROM STDIN DELIMITER ',' CSV HEADER"
+        sql = f"""
+        COPY {schema}.{table} ({', '.join(columns_without_id)})
+        FROM STDIN DELIMITER ',' CSV HEADER
+        """
         cursor.copy_expert(sql, f)
         logger.info(f'загружаем {schema}.{table}')
+
+    row_columns = lambda name: ', '.join(
+        f'{name}.{column}'
+        for column in columns_without_id
+    )
+
+    # NOTE: idk why this statement do not touch some rows, but it delete mostly duplicates
+    # Delete dupliacates
+    delete_duplicates_query = f"""
+    DELETE FROM {schema}.{table} a
+    USING {schema}.{table} b
+    WHERE a.id < b.id AND ROW({row_columns('a')}) = ROW({row_columns('b')});
+    """
+    cursor.execute(delete_duplicates_query)
+
 
 def user_exist(psql_cursor, username):
     sql_str = f"SELECT 1 FROM pg_roles WHERE rolname='{username}'"
