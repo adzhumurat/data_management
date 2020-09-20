@@ -3,12 +3,14 @@ CREATE SCHEMA IF NOT EXISTS movie;
 DROP TABLE IF EXISTS movie.links, postgres.movie.ratings, postgres.movie.events;
 
 CREATE TABLE movie.links (
+    id serial,
     movieId bigint,
     imdbId varchar(400),
     tmdbId varchar(400)
 );
 
 CREATE TABLE movie.ratings (
+    id serial,
     userId bigint,
     movieId bigint,
     rating float(25),
@@ -16,6 +18,7 @@ CREATE TABLE movie.ratings (
 );
 
 CREATE TABLE movie.events (
+  id serial,
   user_id_for_mai bigint,
   session_id varchar(400),
   session_page_index bigint,
