@@ -57,12 +57,11 @@ def fill_table(schema, table):
         for column in columns_without_id
     )
 
-    # NOTE: idk why this statement do not touch some rows, but it delete mostly duplicates
     # Delete dupliacates
     delete_duplicates_query = f"""
     DELETE FROM {schema}.{table} a
     USING {schema}.{table} b
-    WHERE a.id < b.id AND ROW({row_columns('a')}) = ROW({row_columns('b')});
+    WHERE a.id < b.id AND ROW({row_columns('a')}) IS NOT DISTINCT FROM ROW({row_columns('b')});
     """
     cursor.execute(delete_duplicates_query)
 
