@@ -30,40 +30,42 @@ def get_cursor():
     return conn, cursor
 
 
-def get_table_columns(schema, table):
-    get_table_columns_query = f"""
-    SELECT column_name
-    FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE TABLE_SCHEMA = '{schema}' AND TABLE_NAME = '{table}';
-    """
-    cursor.execute(get_table_columns_query)
-    return [c[0] for c in cursor.fetchall()]
-
-
 def fill_table(schema, table):
-    columns = get_table_columns(schema, table)
-    columns_without_id = [c for c in columns if c != 'id']
+    create_temporary_table = f"""
+    CREATE TEMP TABLE tmp_table
+    AS
+    SELECT *
+    FROM {schema}.{table}
+    WITH NO DATA
+    """
 
+    cursor.execute(create_temporary_table)
+
+    # Fill temporary table
     with open(f'/usr/share/data_store/raw_data/{table}.csv', 'r') as f:
-        sql = f"""
-        COPY {schema}.{table} ({', '.join(columns_without_id)})
-        FROM STDIN DELIMITER ',' CSV HEADER
-        """
+        sql = f"COPY tmp_table FROM STDIN DELIMITER ',' CSV HEADER"
         cursor.copy_expert(sql, f)
         logger.info(f'загружаем {schema}.{table}')
 
-    row_columns = lambda name: ', '.join(
-        f'{name}.{column}'
-        for column in columns_without_id
-    )
-
     # Delete dupliacates
-    delete_duplicates_query = f"""
-    DELETE FROM {schema}.{table} a
+    delete_duplicates_from_tmp_table_query = f"""
+    DELETE FROM tmp_table a
     USING {schema}.{table} b
-    WHERE a.id < b.id AND ROW({row_columns('a')}) IS NOT DISTINCT FROM ROW({row_columns('b')});
+    WHERE ROW(a.*) IS NOT DISTINCT FROM ROW(b.*)
     """
-    cursor.execute(delete_duplicates_query)
+    cursor.execute(delete_duplicates_from_tmp_table_query)
+
+    # Insert non duplicating data from tmp_table into target table
+    insert_data_from_temporary_table = f"""
+    INSERT INTO {schema}.{table}
+    SELECT *
+    FROM tmp_table
+    """
+    cursor.execute(insert_data_from_temporary_table)
+
+    # Delete tmp_table
+    drop_temprary_table = 'DROP TABLE tmp_table'
+    cursor.execute(drop_temprary_table)
 
 
 def user_exist(psql_cursor, username):
