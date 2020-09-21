@@ -31,6 +31,15 @@ def get_cursor():
 
 
 def fill_table(schema, table):
+    data_exists_query = f"SELECT COUNT(*) FROM {schema}.{table}"
+    cursor.execute(data_exists_query)
+
+    data_exists_in_table = cursor.fetchall()[0][0] > 0
+
+    if data_exists_in_table:
+        truncate_table_query = f"TRUNCATE TABLE {schema}.{table}"
+        cursor.execute(truncate_table_query)
+
     with open(f'/usr/share/data_store/raw_data/{table}.csv', 'r') as f:
         sql = f"COPY {schema}.{table} FROM STDIN DELIMITER ',' CSV HEADER"
         cursor.copy_expert(sql, f)
