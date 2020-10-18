@@ -101,7 +101,7 @@ def extract():
     print(f'Файлы распакованы в {Constant.data_dir}/{Constant.raw_data_dir}')
 
 
-def transform():
+def transform_json():
     """Трансформируем csv-файл в single-line JSON
 
     :return:
