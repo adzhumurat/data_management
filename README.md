@@ -4,12 +4,21 @@
 
 Узнаём про различные форматы хранения и СУБД. Пишем много SQL
 
+* [Введение в курс]
+    * [Видео](https://youtu.be/XIclsB6sui0?t=539)
+    * [Слайды](https://docs.google.com/presentation/d/1dA8uWlMzBoTOqQCDNzTsKszZt1UgmeGdQYnlSSenV4w/edit?usp=sharing)
 * [Подготовка машины к работе](./slides/env_start_up.md)
+    * [Видео](https://youtu.be/1iwA1_Ss7jA)
+    * [Туториал по технологии docker](https://github.com/adzhumurat/workshop_docker_beginner)
 * [Ведение в базы данных](./slides/database_intro.md)
+    * [Видео](https://youtu.be/jAhI5ZawKxI)
 * [Язык запросов SQL](./slides/sql_language.md)
+    * [Видео ч.1: Реляционная алгебра](https://youtu.be/9SjVtiT4kgg)
+    * [Видео ч.2: Простые операторы SQL + Pandas](https://youtu.be/qdrkKnDURP8)
     * [Домашняя работа: создание и модификация таблиц](./slides/hw/hw1.md)
     * [Домашняя работа: SQL запросы](./slides/hw/hw2.md)
 * [Работа с Postgres](./slides/postgres_db.md)
+    * [Слайды](https://docs.google.com/presentation/d/1328oFuAQfOWH8EWC4MGwfzxc0XUfdXN6Ne1cn9Ry4tY/edit?usp=sharing)
 * [Нереляционные СУБД: MongoDB](./slides/mongo_db.md)
     * [Домашняя работа: работа с MongoDB](./slides/hw/hw2.md)
 
