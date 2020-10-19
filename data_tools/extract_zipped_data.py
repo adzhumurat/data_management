@@ -66,6 +66,7 @@ class Constant:
     source_dir = os.path.join(data_dir, raw_data_dir)
     INPUT_FILE = os.path.join(source_dir, 'movies_metadata.csv')
     OUTPUT_FILE = os.path.join(source_dir, 'tags.json')
+    OUTPUT_GENRES_FILE = os.path.join(source_dir, 'genres.csv')
     # директория, куда распаковывать
     destination_dir = os.path.join(data_dir, raw_data_dir)
     # набор полей в csv файле
@@ -118,6 +119,24 @@ def transform_json():
                     f.write(json.dumps(content_item) + '\n')
                     cnt += 1
     print(f'Данные из {Constant.INPUT_FILE} записаны в выходной файл {Constant.OUTPUT_FILE} в количестве {cnt} строк')
+
+def transform():
+    """Трансформируем csv-файл в single-line JSON
+
+    :return:
+    """
+    with open(Constant.OUTPUT_GENRES_FILE, 'w') as f:
+        with open(Constant.INPUT_FILE) as csvfile:
+            cnt = 0
+            reader = csv.DictReader(csvfile, fieldnames=Constant.csv_fields, delimiter=',')
+            next(reader, None)
+            for row in reader:
+                content_id = row['id']
+                content_genres = eval(row['genres'])
+                for genre in content_genres:
+                    f.write(','.join(map(str, (content_id, genre['name'])))+'\n')
+                cnt += 1
+    print('Записали в файл %s количество строк %s' % (Constant.OUTPUT_GENRES_FILE, cnt))
 
 
 if __name__ == '__main__':
