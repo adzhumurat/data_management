@@ -63,7 +63,9 @@ curl -s "http://youservice/rates/uid"
 
 Код проекта вы найдёте в файле [simple_service.py](../../docker_compose/data_client/app/src/simple_service.py)
 
-* старт веб-сервиса  `docker-compose --project-name data-prj -f docker-compose.yml run -p 5001:5000 --rm -d --name env-app service-app service`
-* с помощью `docker ps` убедитесь, что запустился контейнер `env-app`
+* старт веб-сервиса  ` python3 upstart.py -s service`
+* с помощью `docker ps` убедитесь, что запустился контейнер `data-mng_servce`
 * убедитесь что сервис работает, открыв в браузере `http://localhost:5001/ping`
-* Убедитесь, что сервер подключился к Postgres, открыв в браузере `http://localhost:5001/user/profile/1``
+* Убедитесь, что сервер подключился к Postgres, открыв в браузере `http://localhost:5001/user/profile/1`
+* подключитесь к мониторингу Redis `docker exec -it 876ff73a6c7f "redis-cli" monitor`
+* подключитесь к мониторингу Postgres `docker logs -f $(docker ps -qf "name=postgres_host")`

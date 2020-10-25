@@ -58,7 +58,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 user_profile = postgres_interactor.get_sql_result(
                     f"""
                     SELECT COUNT(rating) as rate_count, AVG(rating) as avg_rating
-                    FROM ratings
+                    FROM movie.ratings
                     WHERE userId = {user_id}"""
                 )[0]
             except Exception as e:
