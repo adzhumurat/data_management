@@ -472,13 +472,13 @@ psql -h $APP_POSTGRES_HOST -U postgres dbname < ratings_parted_dump.sql
 
 Находясь в контейнере, подключимся к psql
 ```
-psql -h $APP_POSTGRES_HOST -U postgres
+python3 upstart.py -s psql
 ```
 
 Создаём партиционированную таблицу с рейтингами
 
 ```sql
-CREATE TABLE ratings_parted (
+CREATE TABLE movie.ratings_parted (
     userId bigint,
     movieId bigint,
     rating float(25),
@@ -489,23 +489,23 @@ CREATE TABLE ratings_parted (
 Создаём шард -табличку с ограничениями на одно из полей - ключ шарда.
 
 ```sql
-CREATE TABLE ratings_parted_0 (
+CREATE TABLE movie.ratings_parted_0 (
     CHECK ( userId % 10 = 0 )
-) INHERITS (ratings_parted);
+) INHERITS (movie.ratings_parted);
 ```
 
 Чтобы заливка происходила правильно, нужно создать дополнительное правило-триггер
 ```sql
-CREATE RULE ratings_insert_0 AS ON INSERT TO ratings_parted
+CREATE RULE ratings_insert_0 AS ON INSERT TO movie.ratings_parted
 WHERE ( userId % 10 = 0 )
-DO INSTEAD INSERT INTO ratings_parted_0 VALUES ( NEW.* );
+DO INSTEAD INSERT INTO movie.ratings_parted_0 VALUES ( NEW.* );
 ```
 
 Проверим, как все работает
 ```sql
-INSERT INTO ratings_parted (
+INSERT INTO movie.ratings_parted (
     SELECT *
-    FROM ratings
+    FROM movie.ratings
     WHERE userid=10
 );
 ```
@@ -513,21 +513,21 @@ INSERT INTO ratings_parted (
 Проверяем результат
 ```sql
 SELECT COUNT (*)
-FROM ratings_parted
+FROM movie.ratings_parted
 ```
 
 
 Ещё одна проверка
 ```sql
 SELECT COUNT (*)
-FROM ratings_parted_0
+FROM movie.ratings_parted_0
 ```
 
 Загадка: что будет, если выполнить запрос
 ```sql
-INSERT INTO ratings_parted (
+INSERT INTO movie.ratings_parted (
     SELECT *
-    FROM ratings
+    FROM movie.ratings
     WHERE userid=11
 );
 ```
