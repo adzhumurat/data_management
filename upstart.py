@@ -26,7 +26,7 @@ if __name__ == '__main__':
     elif args.scenario == 'jupyter':
         sh_command = f'{docker_compose} run -d -p 8889:8888 --rm --name {PROJECT_NAME}_jupyter jupyter-app {args.scenario}'
     elif args.scenario == 'service':
-        sh_command = f'{docker_compose} run -d -p 5001:5000 --rm --name {PROJECT_NAME}_service {args.scenario}'
+        sh_command = f'{docker_compose} run -d -p 5001:5000 {docker_compose_postfix} {args.scenario}'
     elif args.scenario == 'docker':
         sh_command = f'{docker_compose} build {MAIN_SERVICE_NAME}'
     elif args.scenario == 'docker-jupyter':

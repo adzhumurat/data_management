@@ -128,15 +128,19 @@ def transform():
     with open(Constant.OUTPUT_GENRES_FILE, 'w') as f:
         with open(Constant.INPUT_FILE) as csvfile:
             cnt = 0
+            error_count = 0
             reader = csv.DictReader(csvfile, fieldnames=Constant.csv_fields, delimiter=',')
             next(reader, None)
             for row in reader:
-                content_id = row['id']
-                content_genres = eval(row['genres'])
-                for genre in content_genres:
-                    f.write(','.join(map(str, (content_id, genre['name'])))+'\n')
-                cnt += 1
-    print('Записали в файл %s количество строк %s' % (Constant.OUTPUT_GENRES_FILE, cnt))
+                try:
+                    content_id = int(row['id'])
+                    content_genres = eval(row['genres'])
+                    for genre in content_genres:
+                        f.write(','.join(map(str, (content_id, genre['name'])))+'\n')
+                    cnt += 1
+                except ValueError:
+                    error_count += 1
+    print('Записали в файл %s количество строк %s. Кол-во ошибок %d' % (Constant.OUTPUT_GENRES_FILE, cnt, error_count))
 
 
 if __name__ == '__main__':
