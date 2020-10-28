@@ -7,6 +7,7 @@ MAIN_SERVICE_NAME = 'service-app'
 # переменная среды SOURCE_DATA используется в docker-compose
 os.environ['SOURCE_DATA'] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data_store')
 os.environ['JUPYTER_NOTEBOOKS'] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'jupyter_notebooks')
+SPARK_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'spark_example')
 
 docker_compose = f"""docker-compose --project-name {PROJECT_NAME} -f docker_compose/docker-compose.yml \
 """
@@ -31,6 +32,8 @@ if __name__ == '__main__':
         sh_command = f'{docker_compose} build {MAIN_SERVICE_NAME}'
     elif args.scenario == 'docker-jupyter':
         sh_command = f'{docker_compose} build jupyter-app'
+    elif args.scenario == 'spark-jupyter':
+        sh_command = f'docker run -d -p 8890:8888 -v "{SPARK_DIR}:/home/jovyan/work" jupyter/pyspark-notebook:45bfe5a474fa'
     else:
         raise ValueError('Ошибочный сценарий: %s' % args.scenario)
     print(sh_command)
