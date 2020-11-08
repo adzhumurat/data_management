@@ -22,10 +22,12 @@ SELECT imdbid
         movie.ratings.rating = 5
     LIMIT 10;
 
--- Запрос №3.1. Фильмов без оценок нет. Произвольный запрос
-SELECT COUNT(*) AS movies_count  
-    FROM movie.ratings
-    WHERE rating >= 4.5;
+-- Запрос №3.1.
+SELECT DISTINCT COUNT(*)
+    FROM movie.links lnk
+    LEFT JOIN movie.ratings rtg
+        ON rtg.movieid = lnk.movieid
+    WHERE rtg.movieid IS NULL
 
 -- Запрос №3.2
 SELECT userid, AVG(rating) AS avg_ratings 
