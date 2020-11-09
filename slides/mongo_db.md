@@ -49,7 +49,7 @@ db.stats()
 }
 ```
 
-Создадим коллекцию документов
+Переключимся в схему данных `test_db`
 
 ```sql
 use test_db
@@ -61,7 +61,7 @@ use test_db
 switched to db test_db
 ```
 
-Добавим в коллекцию документов один документ
+Добавим в коллекцию документов `test_collection` один документ
 
 ```python
 db.test_collection.insert({name: 'Pepe', gender: 'm', weight: 40})
@@ -137,7 +137,7 @@ db.test_collection.insert({name: 'Lolo', gender: 'f', home: 'Moscow', student: f
 WriteResult({ "nInserted" : 1 })
 ```
 
-Воспользуемся командой find(), которая является аналогом для SELECT в стандарте SQL.
+Воспользуемся командой `find()`, которая является аналогом для SELECT в стандарте SQL.
 ```python
 db.test_collection.find()
 ```
@@ -151,7 +151,7 @@ db.test_collection.find()
 
 Мы добавили в нашу коллекцию новый документ с другим набором полей. Такое добавление было бы невозможно в реляционной БД, где набор полей фиксируется в момент создания таблицы.
 
-Для удаления записей используется функция .remove(), в которую нужно передать селектор
+Для удаления записей используется функция `.remove()`, в которую нужно передать селектор
 
 ```json
 db.test_collection.remove({home: "Moscow"})
@@ -275,7 +275,6 @@ db.test_collection.find()
 
 
 Третий параметр в методе update позволяет создать запись, если она отсутствует - т.н. upsert (UPDATE + INSERT)
-
 
 Попробуем выполнить update записи, которой нет
 ```json
