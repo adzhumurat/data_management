@@ -451,12 +451,12 @@ db.posts.find({author: ObjectId("5b571bf081d67789509607f1")}, {day: 1, _id: 0}).
 
 Для загрузки JSON выполним скрипт формирования JSON - это будут случайные картинки собачек, получаемых по API
 
-```json
+```shell script
 rm -f test.json; for i in $(seq 100 $END); do curl "https://dog.ceo/api/breeds/image/random">>test.json; done;
 ```
 
 На выходе получаем JSON-файл
-```json
+```shell script
 head test.json;
 ```
 
@@ -474,13 +474,13 @@ head test.json;
 **ВНИМАНИЕ** Генерировать файл не надо, он уже есть в исходном наборе
 
 Подключаемся в `bash` терминал контейнера
-```shell
+```shell script
 python3 upstart.py -s bash
 ```
 
 Загрузим файл в Mongo с помощью утилиты mongoimport:
 
-```json
+```shell script
 /usr/bin/mongoimport --host ${APP_MONGO_HOST} --port ${APP_MONGO_PORT} --db pets --collection dogs --file /usr/share/data_store/raw_data/dogs.json
 ```
 
@@ -516,7 +516,7 @@ db.stats()
 ```
 
 Посмотрим на записи, которые появились в таблице
-```json
+```python
 db.dogs.find().limit(3)
 ```
 
@@ -539,7 +539,7 @@ db.dogs.find().limit(3)
 
 Подключаемся в Mongo
 
-```json
+```shell script
 /usr/bin/mongo ${APP_MONGO_HOST}:${APP_MONGO_PORT}/pets
 ```
 
@@ -551,7 +551,7 @@ db.dogs.aggregate([{$group: {_id: "$status"}}])
 
 Это минимально допустимая конструкция, которая не делает ничего полезного, т.к. мы не указали агрегирующую функцию.
 Усложним пример, добавив простой счётчик
-```json
+```python
 db.dogs.aggregate([{$group: {_id: "$status", dog_count: { $sum: 1 }}}])
 ```
 
@@ -570,13 +570,13 @@ db.dogs.aggregate([{$group: {_id: "$status", dog_count: { $sum: 1 }}}])
 Строки в Mongo - объекты Javascript, то есть у них есть атрибут `length`. Таким образом нам нужно применить функцию length каждому полю message всех документов коллекции.
 Для этого мы используем метод курсора forEach и вызовем метод update для каждого документа:
 
-```json
+```python
 db.dogs.find().forEach(function(doc){db.dogs.update({_id:doc._id}, {$set: {message_len: doc.message.length}})})
 ```
 
 Теперь можно посчитать ещё один агрегат - сумму длин строк:
 
-```json
+```python
 db.dogs.aggregate([{$group: {_id: "$status", tag_count: { $sum: 1 }, descr_len: {$sum: "$message_len"}}}])
 { "_id" : "success", "tag_count" : 200, "descr_len" : 11845 }
 ```
