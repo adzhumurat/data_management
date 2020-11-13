@@ -75,11 +75,14 @@ WITH top_rated as ( ЗАПРОС1 ) ЗАПРОС2;
 
 Мы обогатили выборку популярного контента внешними данными о тегах. Теперь мы можем сохранить эту информацию в таблицу для дальнейшего использования
 
-Сохраним нашу выборку в новую таблицу top_rated_tags. Для этого мы модифицируем ЗАПРОС2 - вместо простого SELECT сделаем SELECT INTO.
+Сохраним нашу выборку в новую таблицу `movie.top_rated_tags`. Для этого мы модифицируем ЗАПРОС2 - вместо простого SELECT сделаем SELECT INTO.
 
 Назовём всю эту конструкцию ЗАПРОС3
 ```sql
-WITH top_rated as ( ЗАПРОС1 )  SELECT movieId, top_rated_tags INTO имя_таблицы FROM top_rated ...;
+WITH top_rated as ( ЗАПРОС1 )
+SELECT movieId, top_rated_tags
+INTO movie.top_rated_tags
+FROM top_rated ...;
 ```
 
 Теперь можно выгрузить таблицу в текстовый файл - [пример см. в лекции](https://github.com/adzhumurat/data_management/blob/master/slides/postgres_db.md#data-importexport).
