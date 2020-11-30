@@ -12,6 +12,7 @@ services:
           - postgres_host
     volumes:
       - "${SOURCE_DATA}/pg_data:/var/lib/postgresql/data"
+      - "${SOURCE_DATA}:/usr/share/data_store"
     environment:
       POSTGRES_HOST_AUTH_METHOD: "trust"
   redis_host:
