@@ -27,7 +27,7 @@ SELECT DISTINCT COUNT(*)
     FROM movie.links lnk
     LEFT JOIN movie.ratings rtg
         ON rtg.movieid = lnk.movieid
-    WHERE rtg.movieid IS NULL
+    WHERE rtg.movieid IS NULL;
 
 -- Запрос №3.2
 SELECT userid, AVG(rating) AS avg_ratings 
