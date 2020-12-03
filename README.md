@@ -21,6 +21,9 @@
     * [Слайды](https://docs.google.com/presentation/d/1328oFuAQfOWH8EWC4MGwfzxc0XUfdXN6Ne1cn9Ry4tY/edit?usp=sharing)
 * [Нереляционные СУБД: MongoDB](./slides/mongo_db.md)
     * [Домашняя работа: работа с MongoDB](./slides/hw/hw2.md)
+* [Данные для рекомендательных систем](https://github.com/aleksandr-dzhumurat/recsys_workshop/blob/main/recsys_demo_workshop.ipynb)
+    * [Видео](https://www.youtube.com/watch?v=P7sgVvkpK7A&t=71s)
+    * [Слайды](https://docs.google.com/presentation/d/1VjRdKM_pnROd83Obeav2mHnAWQMl9THooxbGfIWDP30/edit?usp=sharing)
 
 
 ## Курс "Анализ данных"

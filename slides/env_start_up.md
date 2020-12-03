@@ -137,7 +137,7 @@ sudo apt-get install docker-compose
 
 * Проверьте директорию `data_store/pg_data` - она должна быть пустой
 * запустите сборку контейнера для питоновского приложения с помощью команды `python3 upstart.py -s docker`
-* с помощью команды `docker images | grep service-app` убедитесь, что был создан образ с именеи `data-mng_service-app`
+* с помощью команды `docker images | grep service-app` убедитесь, что был создан образ с именем `data-mng_service-app`
 * запустите сборку python окружения (будет использоваться для загрузки данных) `python3 upstart.py -s pipenv`
 * на всякий случай удалите все контейнеры, которые вы уже назапускали `docker rm -f $(docker container ls -q)`
 * запустите загрузку данных в Postgres `python3 upstart.py -s load`. Загрузка выполняется [скрипт для загрузки данных load_data.sh](../docker_compose/data_client/app/load_data.sh)  `docker-entrypint.sh`
