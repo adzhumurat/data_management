@@ -11,4 +11,4 @@
 
 Совет: запустите интерактивную консоль Mongo и выполните отладку запросов в консоли, а потом перенесите конструкции в agg.js.
 
-**СПОЙЛЕР** команду для загрузки файла можно [подсмотреть тут](https://github.com/adzhumurat/workshop_docker_beginner/blob/dcb4921299c41256ee4ea4ae4e49f02c524ff0ce/slides/docker_mongo_hw.md)
+**СПОЙЛЕР** команду для загрузки файла можно [подсмотреть тут](https://github.com/aleksandr-dzhumurat/workshop_docker_beginner/blob/dcb4921299c41256ee4ea4ae4e49f02c524ff0ce/slides/docker_mongo_hw.md)

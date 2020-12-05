@@ -9,7 +9,7 @@
     * [Слайды](https://docs.google.com/presentation/d/1dA8uWlMzBoTOqQCDNzTsKszZt1UgmeGdQYnlSSenV4w/edit?usp=sharing)
 * [Подготовка машины к работе](./slides/env_start_up.md)
     * [Видео](https://youtu.be/1iwA1_Ss7jA)
-    * [Туториал по технологии docker](https://github.com/adzhumurat/workshop_docker_beginner)
+    * [Туториал по технологии docker](https://github.com/aleksandr-dzhumurat/workshop_docker_beginner)
 * [Ведение в базы данных](./slides/database_intro.md)
     * [Видео](https://youtu.be/jAhI5ZawKxI)
 * [Язык запросов SQL](./slides/sql_language.md)

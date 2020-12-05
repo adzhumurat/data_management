@@ -19,7 +19,7 @@ from redis import Redis
 
 # файл, куда посыпятся логи модели
 FORMAT = '%(asctime)-15s %(message)s'
-log_file_name = "/www/app/service.log"
+log_file_name = "/srv/data_client/app/service.log"
 logging.basicConfig(filename=log_file_name, level=logging.INFO, format=FORMAT)
 
 

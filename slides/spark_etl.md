@@ -11,12 +11,8 @@
 python3 upstart.py -s spark-jupyter
 ```
 
-В консоли отобразится ID запущенного контейнера - нужно посмотреть в его лог
-```shell
-docker logs c42d7716d03ea87922de5d5afc4c5df71f8e18d969661b909d1e3ede4593eea5
-```
+В консоли будет адрес, по которому ноутбук доступен в браузере
 
-В ответе будет адрес, по которому ноутбук доступен в браузере
 ```shell
 [I 16:17:16.898 NotebookApp] Jupyter Notebook 6.1.4 is running at:
 [I 16:17:16.898 NotebookApp] http://c42d7716d03e:8888/?token=156ec41da4adf413887c695dac5d179c1f182bf05fda2528
@@ -37,6 +33,3 @@ http://0.0.0.0:8890/?token=156ec41da4adf413887c695dac5d179c1f182bf05fda2528
 ```
 
 Переходим в директорию `work` и открываем файл `big_data_analysys.ipynb` - там будут дальнейшие шаги для анализа.
-
-
-
