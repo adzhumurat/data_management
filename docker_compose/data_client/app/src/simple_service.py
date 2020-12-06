@@ -12,6 +12,7 @@ import logging
 import os
 import socketserver
 from http import HTTPStatus
+from urllib.parse import urlparse, parse_qs, urlunparse
 
 import psycopg2
 from msgpack import packb, unpackb
@@ -32,6 +33,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def get_response(self) -> dict:
         response = {'health-check': 'ok'}
         params_parsed = self.path.split('?')
+
+        # Prepare base_url and query_components 
+        parsed_url = urlparse(self.path)
+        self.query_components = parse_qs(parsed_url.query)
+        parsed_url = parsed_url._replace(query='')
+        self.base_url = urlunparse(parsed_url)
+
         if self.path.startswith('/ping/'):
             response = {'message': 'pong'}
         # Реализуем API profile
@@ -79,7 +87,41 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             {"movie_id": 3341191, "rating": 5, "timestamp": "2019-09-08 16:40:00"}
         ]
         """
-        return dict()
+        user_id = self.base_url.split('/')[-1]
+        limit = self.query_components.get('top', [None])[-1]
+        logging.info(f'Поступил запрос по истории пользователя user_id={user_id}, с параметром top={limit if limit else "не выставлен"}')
+
+        if limit is not None:
+            redis_history_key = f'history:{limit}:{user_id}'
+        else:
+            redis_history_key = f'history:{user_id}'
+
+        if redis_interactor.is_cached(redis_history_key):
+            return redis_interactor.get_data(redis_history_key)
+
+        logging.info(f'История просмотров пользователя user_id={user_id} отсутствует в кеше, выполняем запрос к Postgres')
+
+        history = []
+
+        try:
+            history = postgres_interactor.get_sql_result(
+                f"""
+                SELECT movieid, rating, to_timestamp(timestamp)::varchar
+                FROM movie.ratings
+                WHERE userid={user_id}
+                ORDER BY to_timestamp(timestamp) DESC""" + (f" LIMIT {limit}" if limit else "")
+            )
+        except Exception as e:
+            logging.info(f'Произошла ошибка запроса к Postgres:\n{e}')
+
+        response = [
+            {'movie_id': h[0], 'rating': h[1], 'timestamp': h[2]}
+            for h in history
+        ]
+
+        redis_interactor.set_data(redis_history_key, response, ttl=60*60) # TTL 1 hour
+
+        return response
 
     def do_GET(self):
         # заголовки ответа
@@ -129,8 +171,8 @@ class RedisStorage:
         }
         self.storage = Redis(**REDIS_CONF)
 
-    def set_data(self, redis_key, data):
-        self.storage.set(redis_key, packb(data, use_bin_type=True))
+    def set_data(self, redis_key, data, ttl=None):
+        self.storage.set(redis_key, packb(data, use_bin_type=True), ex=ttl)
 
     def get_data(self, redis_key):
         result = dict()
