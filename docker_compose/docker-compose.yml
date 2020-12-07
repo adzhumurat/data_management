@@ -37,7 +37,7 @@ services:
     volumes:
       - "${SOURCE_DATA}/mongo_data:/data/db"
   service-app:
-    image: adzhumurat/workshop-image:release-20.12.5
+    image: adzhumurat/workshop-image:release-20.12.7
     depends_on:
       - postgres_host
       - redis_host
@@ -61,7 +61,7 @@ services:
     networks:
       - aviation_network
   jupyter-app:
-    image: adzhumurat/workshop-image:release-20.12.5
+    image: adzhumurat/workshop-image:release-20.12.7
     environment:
       - APP_POSTGRES_HOST=postgres_host
       - APP_POSTGRES_PORT=5432
