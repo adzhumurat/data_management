@@ -71,7 +71,7 @@ sudo apt-get install python-pip unzip git;
 Теперь скачиваем репозиторий курса - там хранятся материалы для домашних работ.
 
 ```shell
-git clone https://github.com/adzhumurat/data_management.git
+git clone https://github.com/aleksandr-dzhumurat/data_management.git
 ```
 
 В рапозитории вы найдёте файл `data_management/data_store/movies_data.zip`, в котором хранятся `csv` и `json` файлы.
@@ -91,9 +91,9 @@ ls data_store/raw_data
 dogs.json  links.csv  movies_metadata.csv  ratings.csv events.csv tags.json
 ``` 
 
-**Справка** команда *ls* "печатает" список файлов в директории.
+**Справка**: команда *ls* "печатает" список файлов в директории.
 
-**Справка** для работы в консоли будем использовать базовые команды Linux
+**Справка**: для работы в консоли будем использовать базовые команды Linux
 
 * Команда *sudo* позволяет запустить другие команды с правами Администратора системы
 * Команда *mkdir* создаёт пустую директорию
@@ -109,7 +109,7 @@ dogs.json  links.csv  movies_metadata.csv  ratings.csv events.csv tags.json
 * [тут MacOS](https://docs.docker.com/docker-for-mac/install/)
 * [тут Windows](https://docs.docker.com/docker-for-windows/install/)
 
-Если у Windows, то для установки нужно использовать вот эту инструкцию:  https://docs.docker.com/toolbox/toolbox_install_windows/ 
+Если у Windows, то для установки нужно использовать вот эту инструкцию: `https://docs.docker.com/toolbox/toolbox_install_windows/`
 
 Установим docker, согласно [инструкции для Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/).
 Проверьте, что всё работает с помощью запуска команды
@@ -129,25 +129,22 @@ sudo apt-get install docker-compose
 ## Автоматизируем работу с Docker
 
 Мы будем пользоваться СУБД Postgres и MongoDB, которые развернём в docker.
-Для подробного знакомства с `docker` рекомендую пройти [мини-курс](https://github.com/adzhumurat/workshop_docker_beginner), по желанию.
+Для подробного знакомства с `docker` рекомендую пройти [мини-курс](https://github.com/aleksandr-dzhumurat/workshop_docker_beginner), по желанию.
 
 ### Автоматизация разворачивания среды с помощью docker-compose
 
 Мы используем данные [The Movies Dataset](https://www.kaggle.com/rounakbanik/the-movies-dataset) c Kaggle - нужно стартовать среду, куда зальём "сырые" csv файлы с Kaggle.
 
 * Проверьте директорию `data_store/pg_data` - она должна быть пустой
-* запустите сборку контейнера для питоновского приложения с помощью команды `python3 upstart.py -s docker`
-* с помощью команды `docker images | grep service-app` убедитесь, что был создан образ с именеи `data-mng_service-app`
-* запустите сборку python окружения (будет использоваться для загрузки данных) `python3 upstart.py -s pipenv`
 * на всякий случай удалите все контейнеры, которые вы уже назапускали `docker rm -f $(docker container ls -q)`
-* запустите загрузку данных в Postgres `python3 upstart.py -s load`. Загрузка выполняется [скрипт для загрузки данных load_data.sh](../docker_compose/data_client/app/load_data.sh)  `docker-entrypint.sh`
+* запустите загрузку данных в Postgres `python3 upstart.py -s load`. Загрузку выполняет [скрипт для загрузки данных load_data.py](../docker_compose/data_client/scripts/load_data.py)
 * проверьте что данные в контейнер успешно загружены `python3 upstart.py -s test`
 
 ### Запуск MongoDB
 
-Монга будет запущена автоматически (т.к. мы пользуем docker-compose) - в этом можно убедиться, выполнив команду `docker ps | grep mongo`. Нужно только проверить её работоспособность MongoDB, залив туда данные. 
+Монга будет запущена автоматически (т.к. мы пользуем docker-compose) - в этом можно убедиться, выполнив команду `docker ps | grep mongo`. Нужно только проверить работоспособность MongoDB, залив туда данные. 
 
-* запускаем импорт документов ` python3 upstart.py -s mongoimport` 
+* запускаем импорт документов `python3 upstart.py -s mongoimport` 
 * стартуем mongo `python3 upstart.py -s mongo`
 
 В консоли увидим информацию об успешном запуске
@@ -176,12 +173,11 @@ MongoDB server version: 4.1.6
 ### Бонус: работа jupyter notebook
 
 Jupyter - это удобная визуальная среда для запуска Python приложений.
+Эта среда будет активно использоваться для курса по анализу (весенний семестр)
 
-Чтобы собрать питоновское окружение с jupyter на борту, выполните команду
-
-```shell
-python3 upstart.py -s pipenv
-``` 
+Jupyter можно развернуть двумя способами
+* локально: вот [инструкция для Windows](https://medium.com/@neuralnets/beginners-quick-guide-for-handling-issues-launching-jupyter-notebook-for-python-using-anaconda-8be3d57a209b)
+* с помощью Docker: я рекомендую именно этот вариант
 
 Затем запустите команду старта jupyter ноутбука
 
@@ -199,7 +195,18 @@ python3 upstart.py -s jupyter
         http://0.0.0.0:8888/?token=029e0ce949f5e7cad2d8be93f982f6f5fddb76c81df0353c
 ```
 
-Ссылку `http://0.0.0.0:8888/?token=029e0ce949f5e7cad2d8be93f982f6f5fddb76c81df0353c` нужно открыть в браузере и насладиться интерфейсом Jupyter.
+Ссылку `http://0.0.0.0:8890/?token=029e0ce949f5e7cad2d8be93f982f6f5fddb76c81df0353c` нужно открыть в браузере и насладиться интерфейсом Jupyter.
+братите внимание, что мы поменяли порт с `8888` на `8889`
+
+Если запустили Jupyter в облаке - нужно прокинуть порты с удалённой машины на локальную.
+
+```shell
+ssh -NL 8890:localhost:8889 adzhumurat@84.201.133.48
+```
+
+Открываем в браузере `localhost:8890` - там будет запущен Jupyter формой ввода токена.
+
+Готово! Вы великолепны
 
 ## Решение проблем с docker
 
@@ -225,46 +232,8 @@ sudo docker rm $(sudo docker ps -a -q)
 docker rmi $(docker images -q)
 ```
 
-# Jupyter
 
-Для курса по анализу данных потребуется Jupyter notebook
-
-Jupyter можно развернуть двумя способами
-* локально: вот [инструкция для Windows](https://medium.com/@neuralnets/beginners-quick-guide-for-handling-issues-launching-jupyter-notebook-for-python-using-anaconda-8be3d57a209b)
-* с помощью Docker: я рекомендую именно этот вариант
-
-Когда всё установим - нужно собрать докер-контейнер c python командой
-
-```shell
-python3 upstart.py -s pipenv
-```
-
-Затем запустить jupyter командой
-```shell
-python3 upstart.py -s jupyter
-```
-
-И выяснить токен для логина в Jupyter в логах контейнера `datamng_service-app`
-```shell
-adzhumurat@mai-service:~$ docker logs e60845312ab6
-[I 19:14:44.024 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 19:14:44.027 NotebookApp] 
-    To access the notebook, open this file in a browser:
-        file:///root/.local/share/jupyter/runtime/nbserver-6-open.html
-    Or copy and paste one of these URLs:
-        http://e60845312ab6:8888/?token=94baa30af6bc700c4f39aeaa072ed63157ec46278cd0b17c
-     or http://127.0.0.1:8888/?token=94baa30af6bc700c4f39aeaa072ed63157ec46278cd0b17c
-```
-
-Прокидываем порты на локальную машину
-
-```shell
-ssh -NL 8890:localhost:8889 adzhumurat@84.201.133.48
-```
-
-Открываем в браузере `localhost:8890` - там будет запущен Jupyter формой ввода токена.
-
-Готово! Вы великолепны
+# Как отвязать карту от Яндекс Облака
 
 Отвязать карту не совсем тривиальный процесс. Для этого надо перейти в [Яндекс.Папорт](https://passport.yandex.ru/profile),
  отмотать до середины страницы и кликнуть "Отвязать карту"

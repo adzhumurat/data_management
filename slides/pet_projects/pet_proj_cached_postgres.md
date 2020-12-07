@@ -61,7 +61,7 @@ curl -s "http://youservice/rates/uid"
 
 # Реализация
 
-Код проекта вы найдёте в файле [simple_service.py](../../docker_compose/data_client/app/src/simple_service.py)
+Код проекта вы найдёте в файле [simple_service.py](../../docker_compose/data_client/app/simple_service.py)
 
 * старт веб-сервиса  ` python3 upstart.py -s service`
 * с помощью `docker ps` убедитесь, что запустился контейнер `data-mng_servce`

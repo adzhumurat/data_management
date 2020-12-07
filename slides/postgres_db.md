@@ -1,15 +1,15 @@
 # Типы данных
 
 Перед проведением экспериментов нужно запустить контейнер с подключением к PostgreSQL
- <pre>
+ ```shell
  python3 upstart.py -s psql
- </pre>
+ ```
 
 ## Массивы
 
 Пример создания массива
 
-<pre>
+```sql
 -- создаем таблицу, у которой значения являются массивами
 CREATE TABLE holiday_picnic (
      holiday varchar(50) -- строковое значение
@@ -30,7 +30,7 @@ INSERT INTO holiday_picnic VALUES
      '{"fruit cocktail","berry pie","ice cream"}',
      '{"soda","juice","beer","water"}'
      );
-</pre>
+```
 
 
 ## Геометрические типы данных
@@ -56,9 +56,9 @@ INSERT INTO holiday_picnic VALUES
 
 Хранить более эффективно, чем в виде строк
 
-<pre>
-CREATE TYPE week AS ENUM ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
-</pre>
+```sql
+CREATE TYPE week AS ENUM ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
+```
 
 
 # Полезные команды psql
@@ -67,9 +67,9 @@ CREATE TYPE week AS ENUM ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
 
 Команда pg_database_size вычисляет размер БД в байтах
 
-<pre>
+```sql
 SELECT pg_size_pretty(pg_database_size(current_database()));
-</pre>
+```
 
 Результат
 
@@ -456,7 +456,6 @@ pg_dump -h $APP_POSTGRES_HOST \
 -t public.ratings > /usr/share/data_store/raw_data/ratings_parted_dump.sql
 ```
 
-
 Восстановление из дампа происходит аналогично
 
 ```shell
@@ -470,8 +469,9 @@ psql -h $APP_POSTGRES_HOST -U postgres dbname < ratings_parted_dump.sql
 Шардинг (иногда шардирование) — техника работы с данными, суть которой в разделении (партиционирование) данных на
 отдельные части (по отдельным серверам или отдельным таблицам)
 
-Находясь в контейнере, подключимся к psql
-```
+Подключимся к psql
+
+```shell
 python3 upstart.py -s psql
 ```
 

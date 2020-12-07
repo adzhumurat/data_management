@@ -9,7 +9,7 @@
     * [Слайды](https://docs.google.com/presentation/d/1dA8uWlMzBoTOqQCDNzTsKszZt1UgmeGdQYnlSSenV4w/edit?usp=sharing)
 * [Подготовка машины к работе](./slides/env_start_up.md)
     * [Видео](https://youtu.be/1iwA1_Ss7jA)
-    * [Туториал по технологии docker](https://github.com/adzhumurat/workshop_docker_beginner)
+    * [Туториал по технологии docker](https://github.com/aleksandr-dzhumurat/workshop_docker_beginner)
 * [Ведение в базы данных](./slides/database_intro.md)
     * [Видео](https://youtu.be/jAhI5ZawKxI)
 * [Язык запросов SQL](./slides/sql_language.md)
@@ -21,6 +21,9 @@
     * [Слайды](https://docs.google.com/presentation/d/1328oFuAQfOWH8EWC4MGwfzxc0XUfdXN6Ne1cn9Ry4tY/edit?usp=sharing)
 * [Нереляционные СУБД: MongoDB](./slides/mongo_db.md)
     * [Домашняя работа: работа с MongoDB](./slides/hw/hw2.md)
+* [Данные для рекомендательных систем](https://github.com/aleksandr-dzhumurat/recsys_workshop/blob/main/recsys_demo_workshop.ipynb)
+    * [Видео](https://www.youtube.com/watch?v=P7sgVvkpK7A&t=71s)
+    * [Слайды](https://docs.google.com/presentation/d/1VjRdKM_pnROd83Obeav2mHnAWQMl9THooxbGfIWDP30/edit?usp=sharing)
 
 
 ## Курс "Анализ данных"

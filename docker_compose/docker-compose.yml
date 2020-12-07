@@ -37,8 +37,7 @@ services:
     volumes:
       - "${SOURCE_DATA}/mongo_data:/data/db"
   service-app:
-    build:
-      context: ./data_client
+    image: adzhumurat/workshop-image:release-20.12.7
     depends_on:
       - postgres_host
       - redis_host
@@ -53,20 +52,28 @@ services:
       - APP_MONGO_PORT=27017
     volumes:
       - "${SOURCE_DATA}:/usr/share/data_store"
-      - "./data_client/app:/www/app"
-      - "${JUPYTER_NOTEBOOKS}:/www/app/jupyter_notebooks"
+      - "./data_client/app:/srv/data_client/app"
+      - "./data_client/scripts:/srv/data_client/scripts"
+      - "${JUPYTER_NOTEBOOKS}:/srv/data_client/jupyter_notebooks"
     container_name: data-client
     ports:
       - "5001:5000"
     networks:
       - aviation_network
   jupyter-app:
-    build:
-      context: ./data_client
+    image: adzhumurat/workshop-image:release-20.12.7
+    environment:
+      - APP_POSTGRES_HOST=postgres_host
+      - APP_POSTGRES_PORT=5432
+      - APP_POSTGRES_USER=postgres
+      - APP_REDIS_HOST=redis_host
+      - APP_REDIS_PORT=6379
+      - APP_MONGO_HOST=mongo_host
+      - APP_MONGO_PORT=27017
     volumes:
       - "${SOURCE_DATA}:/usr/share/data_store"
-      - "./data_client/app:/www/app"
-      - "${JUPYTER_NOTEBOOKS}:/www/app/jupyter_notebooks"
+      - "./data_client/app:/srv/data_client/app"
+      - "${JUPYTER_NOTEBOOKS}:/srv/data_client/jupyter_notebooks"
     container_name: jupyter-client
     networks:
       - aviation_network

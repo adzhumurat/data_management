@@ -18,22 +18,26 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-s', '--scenario', dest='scenario', required=True, help='Сценарий работы')
     args = parser.parse_args()
-    if args.scenario in ('pipenv', 'bash', 'psql', 'load', 'test', 'mongo', 'mongoimport'):
+    if args.scenario in ('bash', ):
         sh_command = f'{simple_run} {args.scenario}'
+    elif args.scenario == 'mongo':
+        sh_command = f'{docker_compose} run {docker_compose_postfix} "/usr/bin/mongo" mongo_host:27017'
+    elif args.scenario == 'mongoimport':
+        sh_command = f'{docker_compose} run {docker_compose_postfix} "/usr/bin/mongoimport" --host mongo_host --port 27017 --db movie --collection tags --file /usr/share/data_store/raw_data/tags.json'
+    elif args.scenario == 'load':
+        sh_command = f'{docker_compose} run {docker_compose_postfix} "pipenv" run python3 scripts/load_data.py -s load'
+    elif args.scenario == 'psql':
+        sh_command = f'{docker_compose} run {docker_compose_postfix} "psql" -h postgres_host -U postgres'
+    elif args.scenario == 'test':
+        sh_command = f'{docker_compose} run {docker_compose_postfix} "pipenv" run python3 scripts/load_data.py -s row_count'
     elif args.scenario == 'down':
         sh_command = f'{docker_compose} {args.scenario}'
-    elif args.scenario == 'jupyter-full':
-        sh_command = f'{docker_compose} run -d -p 8889:8888 {docker_compose_postfix} {args.scenario}'
-    elif args.scenario == 'jupyter':
-        sh_command = f'{docker_compose} run -d -p 8889:8888 --rm --name {PROJECT_NAME}_jupyter jupyter-app {args.scenario}'
     elif args.scenario == 'service':
-        sh_command = f'{docker_compose} run -d -p 5001:5000 {docker_compose_postfix} {args.scenario}'
-    elif args.scenario == 'docker':
-        sh_command = f'{docker_compose} build {MAIN_SERVICE_NAME}'
-    elif args.scenario == 'docker-jupyter':
-        sh_command = f'{docker_compose} build jupyter-app'
+        sh_command = f'{docker_compose} run -d -p 5001:5000 {docker_compose_postfix} "pipenv" run python3 app/simple_service.py'
+    elif args.scenario == 'jupyter':
+        sh_command = f'{docker_compose} run -p 8889:8888 --rm --name {PROJECT_NAME}_jupyter jupyter-app {args.scenario}'
     elif args.scenario == 'spark-jupyter':
-        sh_command = f'docker run -d -p 8890:8888 -v "{SPARK_DIR}:/home/jovyan/work" jupyter/pyspark-notebook:45bfe5a474fa'
+        sh_command = f'docker run -p 8890:8888 -v "{SPARK_DIR}:/home/jovyan/work" jupyter/pyspark-notebook:45bfe5a474fa'
     else:
         raise ValueError('Ошибочный сценарий: %s' % args.scenario)
     print(sh_command)
