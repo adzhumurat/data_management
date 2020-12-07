@@ -13,26 +13,30 @@ CREATE TABLE movie.content_genres
 \COPY movie.content_genres FROM '/usr/share/data_store/raw_data/genres.csv' DELIMITER ',' CSV HEADER;
 
 -- Запрос на вывод данных тыблицы 'content_genres'
-select * from movie.content_genres limit 100;
+SELECT * FROM movie.content_genres LIMIT 100;
 
 -- Запрос 1
 SELECT movieid, avg_rating
     FROM (
-        SELECT movieid, AVG(rating) as avg_rating, COUNT(userid) as count_users
-            FROM movie.ratings
-            GROUP BY movieid
-    ) as sample
+        SELECT r.movieid, AVG(r.rating) AS avg_rating, COUNT(userid) as count_users
+            FROM movie.ratings AS r
+            LEFT JOIN movie.content_genres AS cg ON cg.movieid = r.movieid
+            WHERE cg.genre IS NOT NULL
+            GROUP BY r.movieid
+    ) AS sample
     WHERE count_users > 50
     ORDER BY avg_rating DESC, movieid 
     LIMIT 150;
 
 -- Запрос на получение временной таблицы
-WITH top_rated as (
+WITH top_rated AS (
     SELECT movieid, avg_rating
     FROM (
-        SELECT movieid, AVG(rating) as avg_rating, COUNT(userid) as count_users
-            FROM movie.ratings
-            GROUP BY movieid
+        SELECT r.movieid, AVG(r.rating) AS avg_rating, COUNT(userid) as count_users
+            FROM movie.ratings AS r
+            LEFT JOIN movie.content_genres AS cg ON cg.movieid = r.movieid
+            WHERE cg.genre IS NOT NULL
+            GROUP BY r.movieid
     ) as sample
     WHERE count_users > 50
     ORDER BY avg_rating DESC, movieid 
