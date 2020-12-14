@@ -133,12 +133,30 @@ sudo apt-get install docker-compose
 
 ### Автоматизация разворачивания среды с помощью docker-compose
 
-Мы используем данные [The Movies Dataset](https://www.kaggle.com/rounakbanik/the-movies-dataset) c Kaggle - нужно стартовать среду, куда зальём "сырые" csv файлы с Kaggle.
+Мы используем данные [The Movies Dataset](https://www.kaggle.com/rounakbanik/the-movies-dataset) c Kaggle - нужно стартовать среду, куда зальём "сырые" csv файлы.
 
 * Проверьте директорию `data_store/pg_data` - она должна быть пустой
 * на всякий случай удалите все контейнеры, которые вы уже назапускали `docker rm -f $(docker container ls -q)`
 * запустите загрузку данных в Postgres `python3 upstart.py -s load`. Загрузку выполняет [скрипт для загрузки данных load_data.py](../docker_compose/data_client/scripts/load_data.py)
 * проверьте что данные в контейнер успешно загружены `python3 upstart.py -s test`
+
+Создалась таблица `movie.ratings`
+
+| userId | movieId | rating | timestamp |
+| --- | --- | --- | --- |
+| 1 | 999 | 5.0 | 8987866443 |
+| ... | ... | ... | ... |
+| 10 | 5 | 3.0 | 898785647 |
+| 1999 | 14 | 4.0 | 8987866556 |
+
+И таблица movie.links
+
+| movieId | imdbIdId | timdbId |
+| --- | --- | --- |
+| 999 | 6999 | 6758 |
+| ... | ... | ... |
+| 5 | 555 | 4857 |
+| 14 | 144 | 3049 |
 
 ### Запуск MongoDB
 
