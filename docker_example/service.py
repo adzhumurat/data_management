@@ -22,7 +22,18 @@ from sklearn.tree import DecisionTreeClassifier
 # файл, куда посыпятся логи модели
 
 LOG_FORMAT = '%(asctime)s | %(levelname)-8s | %(filename)-25.25s:%(lineno)-4d | %(message)s'
-logging.basicConfig(filename="/www/classifier/data/service.log", level=logging.INFO, format=LOG_FORMAT)
+# logging.basicConfig(filename="/www/classifier/data/service.log", level=logging.INFO, format=LOG_FORMAT)
+
+logFormatter = logging.Formatter(LOG_FORMAT)
+rootLogger = logging.getLogger()
+
+fileHandler = logging.FileHandler("/www/classifier/data/service.log")
+fileHandler.setFormatter(logFormatter)
+rootLogger.addHandler(fileHandler)
+
+consoleHandler = logging.StreamHandler()
+consoleHandler.setFormatter(logFormatter)
+rootLogger.addHandler(consoleHandler)
 
 
 def parse_params(params) -> dict:
