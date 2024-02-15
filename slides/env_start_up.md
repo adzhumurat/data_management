@@ -2,15 +2,11 @@
 
 # Урок 1. Базовая настройка рабочей среды
 
-Занятия будут проходить в ОС Ubuntu 18.04 LTS. Установка необходимых баз данных (Mongo, Postgres, Redis, etc.)
-осуществляется с помощью утилиты виртуализации Docker. Можно установить пакеты прямо в систему Ubuntu - доступны оба варианта, но докер более предпочтителен.
-
-**Примечание:** Если у Вас MacOS - сойдёт, она похожа на Ubuntu и утилиты командной строки там примерно такие же.
-Если у Вас Windows, то будет сложнее, но в целом тоже не критично - главное, чтобы было куда установить Postgres (обязательно!) и остальные дистрибутивы (Mongo, Redis - опционально). 
+Занятия будут проходить MacOS в ОС Ubuntu 22.04 LTS. Установка необходимых баз данных (Mongo, Postgres, Redis, etc.)
+осуществляется с помощью утилиты виртуализации Docker. Устанавливать пакеты прямо (без докера) не рекомендуется. Если у Вас  (или Windows)
 
 ## Установка и настройка операционной системы Ubuntu
 
-Ввесь курс можно проходить и без Ubuntu (или MacOS), но с трудностями винды придётся разбираться при помощи коллег и интернетов, спикер курса не поможет.
 Если ОС Ubuntu не является основной операционной системой, то можно установить её следующими способами 
 
 * предпочтительно: с помощью облачного сервиса Google Cloud [по этой инструкции](#ubuntu-google-cloud) или любого другого, например Яндекс.Облако.
@@ -24,7 +20,7 @@
 
 Сгенерируте ssh-ключи. Это нужно для подключения к удалённому серверу.
 
-Для пользователей Windows есть [пошаговая инструкция](https://docs.joyent.com/public-cloud/getting-started/ssh-keys/generating-an-ssh-key-manually/manually-generating-your-ssh-key-in-windows)
+Как сгенерировать ключи для MacOS или Ubuntu можно найти [тут](https://git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-Public-Key). Для пользователей Windows есть [пошаговая инструкция](https://docs.joyent.com/public-cloud/getting-started/ssh-keys/generating-an-ssh-key-manually/manually-generating-your-ssh-key-in-windows)
 
 ### Шаг 2.
 
@@ -74,14 +70,14 @@ sudo apt-get install python-pip unzip git;
 git clone https://github.com/aleksandr-dzhumurat/data_management.git
 ```
 
-В рапозитории вы найдёте файл `data_management/data_store/movies_data.zip`, в котором хранятся `csv` и `json` файлы.
-Для работы вам нужно извлечь эти файлы в директорию `data_management/data_store/raw_data` чтобы это сделать запустите команду 
+Мы будем работать с данными из архива [user_item_viewsю.zip](https://drive.google.com/file/d/1g9AJx3ab4yDtpcew97qxcvvW-3ABz6B7/view?usp=drive_link), в котором хранятся `csv` и `json` файлы. Архив нужно скачать и добавить в директорию  `data_store`.
+Когда архив добавлен, запустите команду распаковки архива. ОБратите внимание на переменную `ROOT_DATA_DIR` - это корневая директория репозитория, если команда не заработает попробуйте удалить её.
 
 ```shell
-python3 data_tools/extract_zipped_data.py -s extract
+ROOT_DATA_DIR="$(pwd)/data_store" python3 services/data_client/src/scripts/extract_zipped_data.py -s extract
 ```
 
-Чтобы проверить, как применились изменения выполним в консоли команду 
+Эти файлы будут извлечены в директорию `data_management/data_store/raw_data`.Чтобы проверить, как применились изменения выполним в консоли команду 
 ```shell
 ls data_store/raw_data
 ```
@@ -118,11 +114,7 @@ docker run hello-world
 ```
 
 Если увидите ответное приветствие от Docker - готово, вы великолепны! Если не работает без sudo - продолжайте настройку по инструкции.
-Кроме докера поставим docker-compose
-
-```shell
-sudo apt-get install docker-compose
-```
+Кроме докера поставим [docker-compose](https://docs.docker.com/compose/install/standalone/)
 
 Подготовка завершена! Один раз проделав этот пункт, можно к нему больше не возвращаться.
 
@@ -131,13 +123,18 @@ sudo apt-get install docker-compose
 Мы будем пользоваться СУБД Postgres и MongoDB, которые развернём в docker.
 Для подробного знакомства с `docker` рекомендую пройти [мини-курс](https://github.com/aleksandr-dzhumurat/workshop_docker_beginner), по желанию.
 
+Для начала запустим сборку базового образа
+```shell
+docker-compose build base_image
+```
+
 ### Автоматизация разворачивания среды с помощью docker-compose
 
 Мы используем данные [The Movies Dataset](https://www.kaggle.com/rounakbanik/the-movies-dataset) c Kaggle - нужно стартовать среду, куда зальём "сырые" csv файлы.
 
 * Проверьте директорию `data_store/pg_data` - она должна быть пустой
-* на всякий случай удалите все контейнеры, которые вы уже назапускали `docker rm -f $(docker container ls -q)`
-* запустите загрузку данных в Postgres `python3 upstart.py -s load`. Загрузку выполняет [скрипт для загрузки данных load_data.py](../docker_compose/data_client/scripts/load_data.py)
+* запустите postgres-контейнер `docker-compose up postgres_host` и дождитесь строчки `LOG:  database system is ready to accept connections`. Когда строчка появилась - остановите выполнение контейнера комбинацией `Ctrl-C`
+* запустите загрузку данных в Postgres командой `python3 upstart.py -s load`. Загрузку выполняет [скрипт для загрузки данных load_data.py](../docker_compose/data_client/scripts/load_data.py)
 * проверьте что данные в контейнер успешно загружены `python3 upstart.py -s test`
 
 Создалась таблица `movie.ratings`
@@ -157,6 +154,16 @@ sudo apt-get install docker-compose
 | ... | ... | ... |
 | 5 | 555 | 4857 |
 | 14 | 144 | 3049 |
+
+# Metabase
+
+Для запуска Metabase выполняем команду
+
+```shell 
+python3 upstart.py -s metabase
+```
+
+После инициализации открываем в браузере [localhost:3000](http://localhost:3000)
 
 ### Запуск MongoDB
 

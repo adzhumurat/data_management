@@ -1,0 +1,6 @@
+dash
+gunicorn
+pandas
+# postgres
+psycopg2-binary
+SQLAlchemy

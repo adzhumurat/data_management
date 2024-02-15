@@ -6,6 +6,8 @@ data_store/pg_data
 data_store/raw_data
 data_store/mongo_data
 data_store/redis_data
+data_store/raw_data.zip
 jupyter_notebooks/tokenizers/
 jupyter_notebooks/.ipynb_checkpoints/
 spark_example/data/
+data/

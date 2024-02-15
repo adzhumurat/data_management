@@ -1,0 +1,100 @@
+version: '3'
+services:
+  base_image:
+    build:
+      context: .
+    image:
+      adzhumurat/workshop-image:release-20.12.7
+  postgres_host:
+    build:
+      context: ./services/postgres_host
+    restart: always
+    ports: ["5433:5432"]
+    container_name: postgres_host
+    env_file:
+      - services/postgres_host/.env
+    networks:
+      prj_network:
+        aliases:
+          - postgres_host
+    volumes:
+      - ./${DATA_DIR}/pg_data:/var/lib/postgresql/data
+  redis_host:
+    image: redis:3.2-alpine
+    restart: always
+    ports: ["6380:6379"]
+    container_name: redis_host
+    networks:
+      prj_network:
+        aliases:
+          - redis_host
+    volumes:
+      - ./${DATA_DIR}/redis_data:/data
+  mongo_host:
+    image: mongo:4.1.6
+    restart: always
+    ports: ["27018:27017"]
+    container_name: mongo_host
+    networks:
+      prj_network:
+        aliases:
+          - mongo_host
+    volumes:
+      - ./${DATA_DIR}/mongo_data:/data/db
+  service-app:
+    image: adzhumurat/workshop-image:release-20.12.7
+    depends_on:
+      - postgres_host
+      - redis_host
+      - mongo_host
+    env_file:
+      - services/data_client/.env
+    volumes:
+      - ./${SOURCE_DATA}:/usr/share/data_store
+      - ./services/data_client/src:/srv/src
+    container_name: data-client
+    ports:
+      - "5001:5000"
+    networks:
+      - prj_network
+  jupyter-app:
+    image: adzhumurat/workshop-image:release-20.12.7
+    env_file:
+      - services/data_client/.env
+    volumes:
+      - ./data_store:/usr/share/data_store
+      - ./services/data_client/app:/srv/data_client/app
+      - ./jupyter_notebooks:/srv/src/jupyter_notebooks
+    container_name: jupyter-client
+    networks:
+      - prj_network
+  metabase:
+    image: metabase/metabase
+    ports:
+      - 3000:3000
+    env_file:
+      - services/metabase/.env
+    depends_on:
+      - postgres_host
+    container_name: metabase
+    networks:
+      - prj_network
+  plotly:
+    build:
+      context: ./services/plotly
+    ports:
+      - 8002:8002
+    volumes:
+      - ./services/plotly/src:/srv/src
+    env_file:
+      - services/data_client/.env
+    depends_on:
+      - postgres_host
+    container_name: plotly
+    networks:
+      - prj_network
+networks:
+  prj_network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450
