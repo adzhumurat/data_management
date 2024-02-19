@@ -19,7 +19,7 @@ from redis import Redis
 
 # файл, куда посыпятся логи модели
 FORMAT = '%(asctime)-15s %(message)s'
-log_file_name = "/srv/data_client/app/service.log"
+log_file_name = "/srv/data/service.log"
 logging.basicConfig(filename=log_file_name, level=logging.INFO, format=FORMAT)
 
 
@@ -93,9 +93,10 @@ class PostgresStorage:
     def __init__(self):
         # подключение к Postgres
         params = {
-            "host": os.environ['APP_POSTGRES_HOST'],
-            "port": os.environ['APP_POSTGRES_PORT'],
-            "user": 'postgres'
+            "host": os.environ['POSTGRES_HOST'],
+            "port": os.environ['POSTGRES_PORT'],
+            "user": os.environ['POSTGRES_USER'],
+            "password": os.environ['POSTGRES_PASSWORD'],
         }
         self.conn = psycopg2.connect(**params)
 
@@ -144,13 +145,13 @@ class RedisStorage:
 
 
 postgres_interactor = PostgresStorage()
-logging.info('Инициализирован класс для работы с Postgres')
+print('Инициализирован класс для работы с Postgres')
 redis_interactor = RedisStorage()
-logging.info('Инициализирован класс для работы с Redis')
+print('Инициализирован класс для работы с Redis')
 if os.path.exists(log_file_name):
     os.chmod(log_file_name, 0o0777)
 
 if __name__ == '__main__':
     classifier_service = socketserver.TCPServer(('', 5000), Handler)
-    logging.info('Приложение инициализировано')
+    print('Приложение инициализировано')
     classifier_service.serve_forever()

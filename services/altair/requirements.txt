@@ -1,0 +1,8 @@
+pyarrow
+pandas
+altair
+panel
+streamlit
+# postgres
+psycopg2-binary
+SQLAlchemy

@@ -36,20 +36,12 @@ if __name__ == '__main__':
         sh_command = f'{docker_compose} run {docker_compose_postfix} "python3" src/scripts/load_data.py -s load'
     elif args.scenario == 'bash':
         sh_command = f'{docker_compose} run {docker_compose_postfix} bash'
-    elif args.scenario == 'metabase':
-        sh_command = f"{docker_compose} run -p '3000:3000' metabase"
-    elif args.scenario == 'plotly':
-        sh_command = f"{docker_compose} up plotly"
+    elif args.scenario in ('metabase', 'plotly', 'altair', 'down', 'service-app', 'jupyter-app'):
+        sh_command = f"{docker_compose} up {args.scenario}"
     elif args.scenario == 'psql':
         sh_command = f'{docker_compose} run --rm {docker_compose_postfix} "psql" -h postgres_host -U postgres'
     elif args.scenario == 'test':
         sh_command = f'{docker_compose} run {docker_compose_postfix} "python3" src/scripts/load_data.py -s row_count'
-    elif args.scenario == 'down':
-        sh_command = f'{docker_compose} {args.scenario}'
-    elif args.scenario == 'service':
-        sh_command = f'{docker_compose} run -d -p 5001:5000 {docker_compose_postfix} "python3" app/simple_service.py'
-    elif args.scenario == 'jupyter':
-        sh_command = f"{docker_compose} run --rm -p '8889:8888' jupyter-app 'jupyter' notebook src/jupyter_notebooks --ip 0.0.0.0 --port 8888 --allow-root --no-browser --NotebookApp.token='' --NotebookApp.password=''"
     elif args.scenario == 'spark-jupyter':
         sh_command = f'docker run -p 8889:8888 -v "{SPARK_DIR}:/home/jovyan/work" jupyter/pyspark-notebook:45bfe5a474fa'
     else:

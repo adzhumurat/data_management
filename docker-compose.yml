@@ -48,15 +48,17 @@ services:
       - redis_host
       - mongo_host
     env_file:
-      - services/data_client/.env
+      - ./.env
     volumes:
       - ./${SOURCE_DATA}:/usr/share/data_store
+      - ./${DATA_DIR}:/srv/data
       - ./services/data_client/src:/srv/src
     container_name: data-client
-    ports:
-      - "5001:5000"
     networks:
       - prj_network
+    ports:
+      - "5001:5000"
+    command: python3 src/simple_service.py
   jupyter-app:
     image: adzhumurat/workshop-image:release-20.12.7
     env_file:
@@ -66,8 +68,18 @@ services:
       - ./services/data_client/app:/srv/data_client/app
       - ./jupyter_notebooks:/srv/src/jupyter_notebooks
     container_name: jupyter-client
+    ports:
+      - 8889:8888
     networks:
       - prj_network
+    command: >
+      jupyter notebook src/jupyter_notebooks
+      --ip 0.0.0.0
+      --port 8888
+      --allow-root
+      --no-browser
+      --NotebookApp.token=''
+      --NotebookApp.password=''
   metabase:
     image: metabase/metabase
     ports:
@@ -77,6 +89,21 @@ services:
     depends_on:
       - postgres_host
     container_name: metabase
+    networks:
+      - prj_network
+  altair:
+    build:
+      context: ./services/altair
+    image: altair
+    volumes:
+      - ./services/altair/src:/srv/src
+    ports:
+      - 8501:8501
+    env_file:
+      - .env
+    depends_on:
+      - postgres_host
+    container_name: altair
     networks:
       - prj_network
   plotly:

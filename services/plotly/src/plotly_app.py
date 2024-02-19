@@ -71,7 +71,7 @@ def update_graph(n):
     df = pd.read_sql(sql_str, con=engine)
     df['dt'] = pd.to_datetime(df['dt'])
 
-    updated_fig = px.bar(df, x='hour', y='uniq_users',
+    updated_fig = px.bar(df, x='dt', y='uniq_users',
                          labels={'num_users': 'Number of Users', 'hour': 'Hour'},
                          title='Number of Users per Hour')
 
